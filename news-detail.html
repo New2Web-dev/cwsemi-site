@@ -5,21 +5,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Detail - Digisino Electronics Limited</title>
-    <!-- 引入样式表 -->
+    
+    <!-- 1. 使用全绝对路径加载主站 CSS -->
+    <link rel="stylesheet" href="https://www.cwsemi.com/css/style.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Marked.js 解析 Markdown -->
+    
+    <!-- Marked.js 用于解析 Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- 2. 内嵌兜底样式，保障就算外部 CSS 加载延迟，布局也不会崩掉 -->
     <style>
-        .news-detail-wrapper {
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #f8f9fa;
+            color: #333;
+        }
+        .top-bar {
+            background-color: #073a24;
+            color: #fff;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .top-bar a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 0;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-img {
+            height: 45px;
+        }
+        .brand-name {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            color: #0d5c3a;
+            letter-spacing: 1px;
+        }
+        .brand-tagline {
+            display: block;
+            font-size: 11px;
+            color: #666;
+        }
+        .nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 20px;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        .nav a:hover, .nav a.active {
+            color: #0d5c3a;
+        }
+        .page-banner {
+            background: #0d5c3a;
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .page-banner h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .breadcrumb {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        .breadcrumb a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .news-detail-wrapper {
             padding: 50px 0 80px 0;
-            min-height: 600px;
         }
         .news-card {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             padding: 40px;
             max-width: 900px;
             margin: 0 auto;
@@ -31,52 +128,67 @@
             color: #0d5c3a;
             font-weight: 600;
             text-decoration: none;
-            margin-bottom: 25px;
-            transition: color 0.2s;
-        }
-        .back-to-news:hover {
-            color: #073a24;
-            text-decoration: underline;
+            margin-bottom: 20px;
         }
         .news-meta-date {
             color: #0d5c3a;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
         .news-post-title {
-            font-size: 28px;
+            font-size: 26px;
             color: #0d5c3a;
             line-height: 1.4;
             font-weight: 700;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin: 0 0 20px 0;
+            padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
         .news-post-content {
             font-size: 16px;
             line-height: 1.8;
-            color: #333333;
+            color: #333;
         }
-        .news-post-content p {
-            margin-bottom: 20px;
+        .footer {
+            background: #073a24;
+            color: #fff;
+            padding: 40px 0;
+            margin-top: 50px;
         }
-        .news-post-content img {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-            border-radius: 6px;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
         }
-        .news-post-content h1, .news-post-content h2, .news-post-content h3 {
-            color: #0d5c3a;
-            margin: 25px 0 15px 0;
+        .footer-col h3 {
+            color: #fff;
+            margin-top: 0;
+            font-size: 16px;
+            border-bottom: 2px solid #0d5c3a;
+            padding-bottom: 8px;
+            display: inline-block;
         }
-        .news-post-content ul, .news-post-content ol {
-            padding-left: 20px;
-            margin-bottom: 20px;
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-col li {
+            margin-bottom: 8px;
+        }
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+        }
+        .footer-col a:hover {
+            color: #fff;
         }
     </style>
 </head>
@@ -84,49 +196,45 @@
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
-        <div class="container">
-            <div class="top-bar-content">
-                <div class="top-bar-left">
-                    <span>Welcome to Digisino Electronics Limited</span>
-                    <span class="divider">|</span>
-                    <span>Secure Sources</span>
-                    <span class="divider">|</span>
-                    <span>Competitive Price</span>
-                    <span class="divider">|</span>
-                    <span>Cost Down Solutions</span>
-                </div>
-                <div class="top-bar-right">
-                    <a href="mailto:info@digisino.com"><i class="fas fa-envelope"></i> info@digisino.com</a>
-                </div>
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span style="margin:0 8px;">|</span>
+                <span>Secure Sources</span>
+                <span style="margin:0 8px;">|</span>
+                <span>Competitive Price</span>
+                <span style="margin:0 8px;">|</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-bar-right">
+                <a href="mailto:info@digisino.com"><i class="fas fa-envelope"></i> info@digisino.com</a>
             </div>
         </div>
     </div>
 
     <!-- Main Navigation Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="/index.html">
-                        <img src="/images/logo.png" alt="DIGISINO Logo" class="logo-img">
-                        <div class="logo-text">
-                            <span class="brand-name">DIGISINO</span>
-                            <span class="brand-tagline">Electronic Components Distributor</span>
-                        </div>
-                    </a>
-                </div>
-                <nav class="nav">
-                    <ul>
-                        <li><a href="/index.html">DIGISINO</a></li>
-                        <li><a href="/products.html">PRODUCT CENTER</a></li>
-                        <li><a href="/linecards.html">EXTENSIVE LINE CARDS</a></li>
-                        <li><a href="/rfq.html">RFQ/BOM SERVICE</a></li>
-                        <li><a href="/contact.html">CONTACT DIGISINO</a></li>
-                        <li><a href="/information.html">INFORMATION</a></li>
-                        <li><a href="/news.html" class="active">NEWS</a></li>
-                    </ul>
-                </nav>
+        <div class="header-content">
+            <div class="logo">
+                <a href="https://www.cwsemi.com/index.html">
+                    <img src="https://www.cwsemi.com/images/logo.png" alt="DIGISINO Logo" class="logo-img" onerror="this.src='/images/logo.png'">
+                    <div class="logo-text">
+                        <span class="brand-name">DIGISINO</span>
+                        <span class="brand-tagline">Electronic Components Distributor</span>
+                    </div>
+                </a>
             </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="https://www.cwsemi.com/index.html">DIGISINO</a></li>
+                    <li><a href="https://www.cwsemi.com/products.html">PRODUCT CENTER</a></li>
+                    <li><a href="https://www.cwsemi.com/linecards.html">EXTENSIVE LINE CARDS</a></li>
+                    <li><a href="https://www.cwsemi.com/rfq.html">RFQ/BOM SERVICE</a></li>
+                    <li><a href="https://www.cwsemi.com/contact.html">CONTACT DIGISINO</a></li>
+                    <li><a href="https://www.cwsemi.com/information.html">INFORMATION</a></li>
+                    <li><a href="https://www.cwsemi.com/news.html" class="active">NEWS</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -135,7 +243,7 @@
         <div class="container">
             <h1 id="bannerTitle">News Detail</h1>
             <div class="breadcrumb">
-                <a href="/index.html">Home</a> / <a href="/news.html">News</a> / <span id="breadcrumbTitle">Article</span>
+                <a href="https://www.cwsemi.com/index.html">Home</a> / <a href="https://www.cwsemi.com/news.html">News</a> / <span id="breadcrumbTitle">Article</span>
             </div>
         </div>
     </div>
@@ -144,7 +252,7 @@
     <div class="news-detail-wrapper">
         <div class="container">
             <div class="news-card">
-                <a href="/news.html" class="back-to-news">
+                <a href="https://www.cwsemi.com/news.html" class="back-to-news">
                     <i class="fas fa-arrow-left"></i> Back to News Center
                 </a>
                 
@@ -164,32 +272,30 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-col">
-                    <h3>About Digisino</h3>
-                    <p>Digisino Electronics Limited is a professional global distributor of electronic components, providing integrated supply chain solutions and quality services.</p>
-                </div>
-                <div class="footer-col">
-                    <h3>Quality</h3>
-                    <ul>
-                        <li><a href="/qualityguarantee.html">Quality Policy</a></li>
-                        <li><a href="/qualitytesting.html">Testing Lab</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Information</h3>
-                    <ul>
-                        <li><a href="/information.html">Industry News</a></li>
-                        <li><a href="/linecards.html">Line Cards</a></li>
-                        <li><a href="/rfq.html">RFQ Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Connect With Us</h3>
-                    <p>Email: info@digisino.com</p>
-                    <p>Location: Hong Kong / Shenzhen</p>
-                </div>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>About Digisino</h3>
+                <p style="font-size:14px; line-height:1.6; color:rgba(255,255,255,0.7);">Digisino Electronics Limited is a professional global distributor of electronic components, providing integrated supply chain solutions and quality services.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quality</h3>
+                <ul>
+                    <li><a href="https://www.cwsemi.com/qualityguarantee.html">Quality Policy</a></li>
+                    <li><a href="https://www.cwsemi.com/qualitytesting.html">Testing Lab</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="https://www.cwsemi.com/information.html">Industry News</a></li>
+                    <li><a href="https://www.cwsemi.com/linecards.html">Line Cards</a></li>
+                    <li><a href="https://www.cwsemi.com/rfq.html">RFQ Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p style="font-size:14px; color:rgba(255,255,255,0.7);">Email: info@digisino.com</p>
+                <p style="font-size:14px; color:rgba(255,255,255,0.7);">Location: Hong Kong / Shenzhen</p>
             </div>
         </div>
     </footer>
@@ -201,13 +307,13 @@
             const postId = params.get('id');
 
             if (!postId) {
-                window.location.href = '/news.html';
+                window.location.href = 'https://www.cwsemi.com/news.html';
                 return;
             }
 
             try {
-                // 根据你的目录树，请求 content/news/ 文件夹下的 .md 文件
-                const response = await fetch(`/content/news/${postId}.md?v=` + new Date().getTime());
+                // 使用绝对 URL Fetch Markdown 内容
+                const response = await fetch(`https://www.cwsemi.com/content/news/${postId}.md?v=` + new Date().getTime());
                 if (!response.ok) throw new Error('File not found');
 
                 const text = await response.text();
@@ -216,7 +322,6 @@
                 let date = '';
                 let markdownContent = text;
 
-                // 解析 YAML Front Matter (即文章顶部的 --- 格式元数据)
                 if (text.startsWith('---')) {
                     const parts = text.split('---');
                     if (parts.length >= 3) {
@@ -231,19 +336,16 @@
                     }
                 }
 
-                // 更新网页标题和 DOM
-                document.title = title + " - Digisino Electronics";
+                document.title = title + " - Digisino Electronics Limited";
                 document.getElementById('postTitle').textContent = title;
                 document.getElementById('bannerTitle').textContent = title;
                 document.getElementById('breadcrumbTitle').textContent = title;
-                document.getElementById('postDate').textContent = date || 'Latest News';
-                
-                // 渲染 Markdown 内容
+                document.getElementById('postDate').textContent = date || 'October 06, 2026';
                 document.getElementById('postBody').innerHTML = marked.parse(markdownContent);
 
             } catch (err) {
-                console.error('Error loading Markdown:', err);
-                document.getElementById('postBody').innerHTML = '<h3 style="color:#c00;">Article content could not be loaded.</h3><p>Please make sure the file exists under <code>content/news/</code>.</p>';
+                console.error(err);
+                document.getElementById('postBody').innerHTML = '<h3 style="color:#c00;">Article content could not be loaded.</h3><p>Please check back later.</p>';
             }
         })();
     </script>
