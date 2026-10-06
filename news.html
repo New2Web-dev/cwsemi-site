@@ -404,7 +404,7 @@
             const paginationEl = document.getElementById('newsPagination');
             if (!listEl || !paginationEl) return;
 
-            // 兜底默认数据（如果请求 JSON 失败，至少能显示这些新闻）
+            // 兜底默认数据
             let defaultNews = [
                 {
                     id: '2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026',
@@ -439,16 +439,15 @@
             let allNews = [];
 
             try {
-                // 优先从网络读取新闻 JSON
+                // 从网络读取新闻 JSON 索引
                 const response = await fetch('/content/news-index.json?v=' + new Date().getTime());
                 if (response.ok) {
                     allNews = await response.json();
                 } else {
-                    console.warn('JSON file not found, using fallback data.');
                     allNews = defaultNews;
                 }
             } catch (error) {
-                console.error('Error fetching JSON, using fallback data:', error);
+                console.error('Error fetching JSON:', error);
                 allNews = defaultNews;
             }
 
@@ -468,6 +467,19 @@
                 return 1;
             }
 
+            function getNewsUrl(news) {
+                // 如果 JSON 中明确写了 url，则直接优先使用 url
+                if (news.url) return news.url;
+
+                // 如果 id 已经包含了路径后缀，直接使用
+                if (news.id.endsWith('.html')) {
+                    return news.id.startsWith('/') ? news.id : `/news/${news.id}`;
+                }
+
+                // 针对旧格式 news-20250807 和 Pages CMS 生成的长 slug ID 的智能匹配
+                return `/news/${news.id}.html`;
+            }
+
             function renderPage(page) {
                 listEl.innerHTML = '';
 
@@ -483,12 +495,7 @@
                 for (let i = startIndex; i < endIndex; i++) {
                     const news = sortedNews[i];
                     const displayIndex = i + 1;
-
-                    // 计算新闻链接：如果有 url 用 url，如果没有则拼拼出标准文件路径
-                    let newsUrl = news.url;
-                    if (!newsUrl) {
-                        newsUrl = `/news/${news.id}.html`;
-                    }
+                    const newsUrl = getNewsUrl(news);
 
                     const item = document.createElement('div');
                     item.className = 'news-item';
