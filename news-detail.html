@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Detail - Digisino Electronics</title>
+    <!-- 引入 Marked.js 解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        .news-detail-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+        }
+        .news-detail-title {
+            font-size: 32px;
+            color: #0d5c3a;
+            margin-bottom: 10px;
+        }
+        .news-detail-date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .news-detail-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #0d5c3a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="news-detail-container">
+        <a href="/news.html" class="back-link">&larr; Back to News Center</a>
+        <h1 id="postTitle" class="news-detail-title">Loading...</h1>
+        <div id="postDate" class="news-detail-date"></div>
+        <div id="postBody" class="news-detail-content">Loading content...</div>
+    </div>
+
+    <script>
+        (async function () {
+            // 获取 URL 参数中的 id，例如 news-detail.html?id=2026-10-06-digisino...
+            const params = new URLSearchParams(window.location.search);
+            const postId = params.get('id');
+
+            if (!postId) {
+                window.location.href = '/news.html';
+                return;
+            }
+
+            try {
+                // 读取 content/news/ 目录下对应的 .md 原文件
+                const response = await fetch(`/content/news/${postId}.md?v=` + new Date().getTime());
+                if (!response.ok) throw new Error('Post not found');
+
+                const text = await response.text();
+
+                // 解析 front-matter (文章顶部的元数据，如 title, date)
+                let title = postId;
+                let date = '';
+                let markdownContent = text;
+
+                if (text.startsWith('---')) {
+                    const parts = text.split('---');
+                    if (parts.length >= 3) {
+                        const frontMatter = parts[1];
+                        markdownContent = parts.slice(2).join('---');
+
+                        const titleMatch = frontMatter.match(/title:\s*["']?(.*?)["']?\r?\n/);
+                        const dateMatch = frontMatter.match(/date:\s*["']?(.*?)["']?\r?\n/);
+
+                        if (titleMatch) title = titleMatch[1];
+                        if (dateMatch) date = dateMatch[1];
+                    }
+                }
+
+                // 渲染渲染内容
+                document.getElementById('postTitle').textContent = title;
+                document.getElementById('postDate').textContent = date;
+                document.getElementById('postBody').innerHTML = marked.parse(markdownContent);
+                document.title = title + " - Digisino Electronics";
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('postBody').innerHTML = '<h2>Article not found or failed to load.</h2>';
+            }
+        })();
+    </script>
+</body>
+</html>
