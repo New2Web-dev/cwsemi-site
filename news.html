@@ -1,75 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News & Updates - Digisino Electronics Limited</title>
-  
-  <!-- 绝对路径引入网站统一的主样式表 -->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/news.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Latest news and shipment records from Digisino Electronics. Stay updated with our component sourcing and industry insights.">
+    <meta name="keywords" content="electronic components news, semiconductor updates, Digisino shipment records, electronic parts industry news">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== News 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/news-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 80px 0;
+        }
+
+        /* News List (目录形式) */
+        .news-list {
+            margin-top: 40px;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 10px;
+            border-bottom: 1px solid #e5e5e5;
+            transition: var(--transition);
+        }
+
+        .news-item:first-child {
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .news-item:hover {
+            background-color: rgba(0, 111, 66, 0.04);
+        }
+
+        .news-index {
+            flex-shrink: 0;
+            width: 40px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .news-date {
+            flex-shrink: 0;
+            width: 150px;
+            color: var(--gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .news-title {
+            flex: 1;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .news-read-more {
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .news-read-more:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* 每个 item 内部的链接共享悬停效果 */
+        .news-item a {
+            color: inherit;
+        }
+        .news-item a:hover {
+            color: var(--primary-color);
+        }
+        .news-index-link {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .news-date-link {
+            color: var(--gray);
+        }
+
+        /* 空状态 */
+        .news-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Pagination */
+        .news-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 15px;
+            background: var(--white);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.prev,
+        .pagination-btn.next {
+            gap: 8px;
+            padding: 0 18px;
+        }
+
+        /* ===== News 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+            .news-item {
+                flex-wrap: wrap;
+                gap: 8px 15px;
+            }
+            .news-index {
+                width: 30px;
+            }
+            .news-date {
+                width: auto;
+            }
+            .news-title {
+                flex: 1 1 100%;
+                order: 3;
+            }
+            .news-read-more {
+                order: 4;
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .news-item {
+                padding: 15px 5px;
+            }
+            .news-title {
+                font-size: 1rem;
+            }
+            .news-read-more {
+                font-size: 0.85rem;
+            }
+            .pagination-btn {
+                min-width: 38px;
+                height: 38px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- 动态加载统一页眉 -->
-  <div id="header-placeholder"></div>
-
-  <!-- Banner 区域 -->
-  <section class="page-banner">
-    <div class="container">
-      <h1>News & Updates</h1>
-    </div>
-  </section>
-
-  <!-- 新闻列表区域 -->
-  <section class="news-section">
-    <div class="container">
-      <div id="newsList" class="news-list">
-        <!-- 动态加载新闻内容 -->
-      </div>
-    </div>
-  </section>
-
-  <!-- 动态加载统一页脚 -->
-  <div id="footer-placeholder"></div>
-
-  <!-- 页眉页脚组件加载脚本 -->
-  <script src="/js/main.js"></script>
-
-  <script>
-    async function loadNews() {
-      try {
-        const response = await fetch('/content/news-index.json');
-        if (!response.ok) throw new Error('Failed to load news index');
-        const newsList = await response.json();
-
-        const container = document.getElementById('newsList');
-        if (!container) return;
-
-        container.innerHTML = '';
-
-        newsList.forEach((item, index) => {
-          // 注意：此处修改跳转链接为根目录下的 /detail.html（或 /news-detail.html）
-          const detailUrl = `/detail.html?id=${item.id}`;
-          
-          const itemHtml = `
-            <div class="news-item" onclick="location.href='${detailUrl}'" style="cursor: pointer;">
-              <div class="news-number">${index + 1}.</div>
-              <div class="news-date">${item.displayDate || item.date}</div>
-              <div class="news-title-container">
-                <h3 class="news-title">${item.title}</h3>
-              </div>
-              <a href="${detailUrl}" class="read-more">READ FULL STORY &rarr;</a>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
             </div>
-          `;
-          container.insertAdjacentHTML('beforeend', itemHtml);
-        });
-      } catch (error) {
-        console.error('Error loading news:', error);
-      }
-    }
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', loadNews);
-  </script>
-</body>
-</html>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Latest News & Shipments</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li>News</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- News List -->
+    <section class="news-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Recent Updates</h2>
+                <p>Stay informed about our latest achievements and industry insights</p>
+            </div>
+
+            <!-- 新闻列表容器（JS 动态渲染） -->
+            <div class="news-list" id="newsList"></div>
+
+            <!-- 分页容器（JS 动态渲染） -->
+            <div class="news-pagination" id="newsPagination"></div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+
+    <!-- News 页面动态渲染脚本 -->
+    <script>
+        (async function () {
+            const ITEMS_PER_PAGE = 30;
+
+            const listEl = document.getElementById('newsList');
+            const paginationEl = document.getElementById('newsPagination');
+            if (!listEl || !paginationEl) return;
+
+            let allNews = [];
+
+            try {
+                // 1. 从 JSON 动态读取索引数据
+                const response = await fetch('/content/news-index.json');
+                if (!response.ok) throw new Error('Failed to load news index');
+                allNews = await response.json();
+            } catch (error) {
+                console.error('Error loading news index:', error);
+                listEl.innerHTML = '<div class="news-empty">Failed to load news. Please try again later.</div>';
+                return;
+            }
+
+            // 2. 按日期从新到旧排序
+            const sortedNews = allNews.slice().sort(function (a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            const totalPages = Math.max(1, Math.ceil(sortedNews.length / ITEMS_PER_PAGE));
+
+            function getPageFromHash() {
+                const match = window.location.hash.match(/page=(\d+)/);
+                if (match) {
+                    const p = parseInt(match[1], 10);
+                    if (p >= 1 && p <= totalPages) return p;
+                }
+                return 1;
+            }
+
+            function renderPage(page) {
+                listEl.innerHTML = '';
+
+                if (sortedNews.length === 0) {
+                    listEl.innerHTML = '<div class="news-empty">No news available yet. Please check back later.</div>';
+                    paginationEl.innerHTML = '';
+                    return;
+                }
+
+                const startIndex = (page - 1) * ITEMS_PER_PAGE;
+                const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedNews.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const news = sortedNews[i];
+                    const displayIndex = i + 1;
+
+                    // 兼容 Pages CMS 生成的 url 或依据 id 格式化的 url
+                    const newsUrl = news.url || (
