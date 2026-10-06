@@ -410,8 +410,7 @@
                     id: '2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026',
                     date: '2026-10-06',
                     displayDate: 'October 06, 2026',
-                    title: 'Digisino Ranked Among Top 50 APAC Distributors in 2026',
-                    url: '/news/news-20261006.html'
+                    title: 'Digisino Ranked Among Top 50 APAC Distributors in 2026'
                 },
                 {
                     id: 'news-20250807',
@@ -439,7 +438,7 @@
             let allNews = [];
 
             try {
-                // 从网络读取新闻 JSON 索引
+                // 读取 JSON 索引
                 const response = await fetch('/content/news-index.json?v=' + new Date().getTime());
                 if (response.ok) {
                     allNews = await response.json();
@@ -467,16 +466,14 @@
                 return 1;
             }
 
+            // 核心逻辑：智能选择跳转路径
             function getNewsUrl(news) {
-    // 1. 如果 JSON 里明确保留了老 HTML 路径，直接走老路径
-    if (news.url) return news.url;
-
-    // 2. 如果是 Pages CMS 生成的 MD 文章，统一跳转到通用渲染页 news-detail.html
-    return `/news-detail.html?id=${news.id}`;
-}
-
-                // 针对旧格式 news-20250807 和 Pages CMS 生成的长 slug ID 的智能匹配
-                return `/news/${news.id}.html`;
+                // 1. 如果 JSON 中明确写了 url（老文章），直接走老 HTML 路径
+                if (news.url) {
+                    return news.url;
+                }
+                // 2. 如果是 Pages CMS 生成的 MD 文章，统一跳转到 news-detail.html 动态渲染页
+                return `/news-detail.html?id=${encodeURIComponent(news.id)}`;
             }
 
             function renderPage(page) {
