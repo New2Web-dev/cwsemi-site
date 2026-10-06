@@ -468,13 +468,12 @@
             }
 
             function getNewsUrl(news) {
-                // 如果 JSON 中明确写了 url，则直接优先使用 url
-                if (news.url) return news.url;
+    // 1. 如果 JSON 里明确保留了老 HTML 路径，直接走老路径
+    if (news.url) return news.url;
 
-                // 如果 id 已经包含了路径后缀，直接使用
-                if (news.id.endsWith('.html')) {
-                    return news.id.startsWith('/') ? news.id : `/news/${news.id}`;
-                }
+    // 2. 如果是 Pages CMS 生成的 MD 文章，统一跳转到通用渲染页 news-detail.html
+    return `/news-detail.html?id=${news.id}`;
+}
 
                 // 针对旧格式 news-20250807 和 Pages CMS 生成的长 slug ID 的智能匹配
                 return `/news/${news.id}.html`;
