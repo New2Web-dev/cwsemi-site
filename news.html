@@ -467,11 +467,11 @@
             }
 
             // 核心逻辑：智能选择跳转路径
-            function getNewsUrl(news) {
-                // 1. 如果 JSON 中明确写了 url（老文章），直接走老 HTML 路径
-                if (news.url) {
-                    return news.url;
-                }
+           function getNewsUrl(news) {
+    if (news.url) return news.url;
+    // 强制带上 .html，防止服务器 Clean URLs 重定向导致相对路径失效
+    return `/news-detail.html?id=${encodeURIComponent(news.id)}`;
+}
                 // 2. 如果是 Pages CMS 生成的 MD 文章，统一跳转到 news-detail.html 动态渲染页
                 return `/news-detail.html?id=${encodeURIComponent(news.id)}`;
             }
