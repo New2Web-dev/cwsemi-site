@@ -2,12 +2,11 @@ media:
   input: webp-images/content
   output: /webp-images/content
 
-collections:
+content:
   - name: news
     label: News & Updates
+    type: collection
     path: content/news
-    type: folder
-    format: raw
     fields:
       - name: title
         label: Article Title
@@ -15,12 +14,12 @@ collections:
         required: true
       - name: date
         label: Publication Date
-        type: date
+        type: string
         required: true
       - name: description
         label: SEO Meta Description
         type: string
       - name: body
         label: Content Body
-        type: markdown
+        type: rich-text
         required: true
