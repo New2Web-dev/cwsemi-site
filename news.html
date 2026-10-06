@@ -395,7 +395,7 @@
     <!-- 公共脚本 -->
     <script src="/js/main.js" defer></script>
 
-    <!-- News 页面动态渲染脚本 -->
+<!-- News 页面动态渲染脚本 -->
     <script>
         (async function () {
             const ITEMS_PER_PAGE = 30;
@@ -404,20 +404,55 @@
             const paginationEl = document.getElementById('newsPagination');
             if (!listEl || !paginationEl) return;
 
+            // 兜底默认数据（如果请求 JSON 失败，至少能显示这些新闻）
+            let defaultNews = [
+                {
+                    id: '2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026',
+                    date: '2026-10-06',
+                    displayDate: 'October 06, 2026',
+                    title: 'Digisino Ranked Among Top 50 APAC Distributors in 2026',
+                    url: '/news/news-20261006.html'
+                },
+                {
+                    id: 'news-20250807',
+                    date: '2025-08-07',
+                    displayDate: 'August 07, 2025',
+                    title: 'Digisino Ranked Among Top 50 APAC Distributors',
+                    url: '/news/news-20250807.html'
+                },
+                {
+                    id: 'news-20250718',
+                    date: '2025-07-18',
+                    displayDate: 'July 18, 2025',
+                    title: 'Successful Delivery of STM32F407ZET6 to Brazilian EMS Leader',
+                    url: '/news/news-20250718.html'
+                },
+                {
+                    id: 'news-20250712',
+                    date: '2025-07-12',
+                    displayDate: 'July 12, 2025',
+                    title: 'Strategic Partnership with BYD: Supply Chain Solutions Showcase',
+                    url: '/news/news-20250712.html'
+                }
+            ];
+
             let allNews = [];
 
             try {
-                // 1. 从 JSON 动态读取索引数据
-                const response = await fetch('/content/news-index.json');
-                if (!response.ok) throw new Error('Failed to load news index');
-                allNews = await response.json();
+                // 优先从网络读取新闻 JSON
+                const response = await fetch('/content/news-index.json?v=' + new Date().getTime());
+                if (response.ok) {
+                    allNews = await response.json();
+                } else {
+                    console.warn('JSON file not found, using fallback data.');
+                    allNews = defaultNews;
+                }
             } catch (error) {
-                console.error('Error loading news index:', error);
-                listEl.innerHTML = '<div class="news-empty">Failed to load news. Please try again later.</div>';
-                return;
+                console.error('Error fetching JSON, using fallback data:', error);
+                allNews = defaultNews;
             }
 
-            // 2. 按日期从新到旧排序
+            // 按日期从新到旧排序
             const sortedNews = allNews.slice().sort(function (a, b) {
                 return new Date(b.date) - new Date(a.date);
             });
@@ -449,5 +484,93 @@
                     const news = sortedNews[i];
                     const displayIndex = i + 1;
 
-                    // 兼容 Pages CMS 生成的 url 或依据 id 格式化的 url
-                    const newsUrl = news.url || (
+                    // 计算新闻链接：如果有 url 用 url，如果没有则拼拼出标准文件路径
+                    let newsUrl = news.url;
+                    if (!newsUrl) {
+                        newsUrl = `/news/${news.id}.html`;
+                    }
+
+                    const item = document.createElement('div');
+                    item.className = 'news-item';
+
+                    // 序号
+                    const indexLink = document.createElement('a');
+                    indexLink.href = newsUrl;
+                    indexLink.className = 'news-index news-index-link';
+                    indexLink.textContent = displayIndex + '.';
+
+                    // 日期
+                    const dateLink = document.createElement('a');
+                    dateLink.href = newsUrl;
+                    dateLink.className = 'news-date news-date-link';
+                    dateLink.textContent = news.displayDate || news.date;
+
+                    // 标题
+                    const titleLink = document.createElement('a');
+                    titleLink.href = newsUrl;
+                    titleLink.className = 'news-title';
+                    titleLink.textContent = news.title;
+
+                    // Read Full Story
+                    const readMoreLink = document.createElement('a');
+                    readMoreLink.href = newsUrl;
+                    readMoreLink.className = 'news-read-more';
+                    readMoreLink.textContent = 'Read Full Story';
+
+                    item.appendChild(indexLink);
+                    item.appendChild(dateLink);
+                    item.appendChild(titleLink);
+                    item.appendChild(readMoreLink);
+                    listEl.appendChild(item);
+                }
+
+                renderPagination(page);
+            }
+
+            function renderPagination(currentPage) {
+                paginationEl.innerHTML = '';
+
+                if (totalPages <= 1) return;
+
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'pagination-btn prev';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.addEventListener('click', function () {
+                    if (currentPage > 1) goToPage(currentPage - 1);
+                });
+                paginationEl.appendChild(prevBtn);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'pagination-btn' + (p === currentPage ? ' active' : '');
+                    btn.textContent = p;
+                    btn.addEventListener('click', function () {
+                        goToPage(p);
+                    });
+                    paginationEl.appendChild(btn);
+                }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'pagination-btn next';
+                nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.addEventListener('click', function () {
+                    if (currentPage < totalPages) goToPage(currentPage + 1);
+                });
+                paginationEl.appendChild(nextBtn);
+            }
+
+            function goToPage(page) {
+                if (page < 1 || page > totalPages) return;
+                window.location.hash = 'page=' + page;
+            }
+
+            window.addEventListener('hashchange', function () {
+                renderPage(getPageFromHash());
+                listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            renderPage(getPageFromHash());
+        })();
+    </script>
