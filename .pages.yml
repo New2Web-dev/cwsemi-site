@@ -1,0 +1,26 @@
+media:
+  input: webp-images/content
+  output: /webp-images/content
+
+collections:
+  - name: news
+    label: News & Updates
+    path: content/news
+    type: folder
+    format: raw
+    fields:
+      - name: title
+        label: Article Title
+        type: string
+        required: true
+      - name: date
+        label: Publication Date
+        type: date
+        required: true
+      - name: description
+        label: SEO Meta Description
+        type: string
+      - name: body
+        label: Content Body
+        type: markdown
+        required: true
