@@ -1,5 +1,11 @@
 [
   {
+    "id": "2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026",
+    "date": "2026-10-06",
+    "displayDate": "October 06, 2026",
+    "title": "Digisino Ranked Among Top 50 APAC Distributors in 2026"
+  },
+  {
     "id": "news-20250807",
     "date": "2025-08-07",
     "displayDate": "August 07, 2025",
@@ -10,5 +16,11 @@
     "date": "2025-07-18",
     "displayDate": "July 18, 2025",
     "title": "Successful Delivery of STM32F407ZET6 to Brazilian EMS Leader"
+  },
+  {
+    "id": "news-20250712",
+    "date": "2025-07-12",
+    "displayDate": "July 12, 2025",
+    "title": "Strategic Partnership with BYD: Supply Chain Solutions Showcase"
   }
 ]
