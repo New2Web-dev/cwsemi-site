@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STM32 Shipment to Brazil - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Digisino delivers STM32F407ZET6 microcontrollers to leading Brazilian EMS provider">
+    <meta name="keywords" content="Digisino Brazil shipment, STM32F407ZET6 delivery, South American electronics market">
+    <link rel="canonical" href="https://www.cwsemi.com/news/news-20250718.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== News 详情页专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/news-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* News Content */
+        .news-section {
+            padding: 80px 0;
+        }
+        .news-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .news-item {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            margin-bottom: 40px;
+            transition: var(--transition);
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .news-date {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .news-date i {
+            font-size: 1.2rem;
+        }
+        .news-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+        .news-content {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .news-content h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+        }
+        .news-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .shipment-details {
+            background: rgba(0, 111, 66, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .shipment-details h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .shipment-details ul {
+            list-style: none;
+            padding: 0;
+        }
+        .shipment-details li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .shipment-details li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Back Button */
+        .back-to-news {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 4px;
+            transition: var(--transition);
+            margin-top: 30px;
+            font-weight: 500;
+        }
+        .back-to-news:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* Social Share */
+        .social-share {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .share-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: var(--light-gray);
+            color: var(--text-color);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .share-btn.facebook {
+            background: #3b5998;
+            color: white;
+        }
+        .share-btn.twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+        .share-btn.linkedin {
+            background: #0077B5;
+            color: white;
+        }
+        .share-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        /* ===== News 详情页响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+            .news-item {
+                padding: 30px;
+            }
+            .social-share {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .news-title {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .news-item {
+                padding: 25px 20px;
+            }
+            .news-date {
+                font-size: 0.9rem;
+            }
+            .news-title {
+                font-size: 1.3rem;
+            }
+            .news-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>STM32 Shipment to Brazil</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/news.html">News</a></li>
+                <li>Brazil Shipment</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- News Content -->
+    <section class="news-section">
+        <div class="container">
+            <div class="news-container">
+                <div class="news-item">
+                    <div class="news-date">
+                        <i class="far fa-calendar-alt"></i> July 18, 2025
+                    </div>
+                    <h3 class="news-title">Successful Delivery of STM32F407ZET6 to Brazilian EMS Leader</h3>
+                    <div class="news-content">
+                        <p>Digisino Electronics has successfully delivered 36,000 units of the popular STM32F407ZET6 microcontroller to one of Brazil's top three EMS providers. This shipment highlights our strong capabilities in supplying high-demand components to the rapidly growing South American electronics market.</p>
+
+                        <img src="/webp-images/content/STM32F407ZET6_digisino electronics.webp" alt="STM32F407ZET6 Shipment to Brazil">
+
+                        <p>The STM32F series has become increasingly popular in Brazil's industrial automation and IoT sectors due to its powerful ARM Cortex-M4 core and rich peripheral set. Our deep expertise with STMicroelectronics products and established logistics network allowed us to fulfill this large order efficiently:</p>
+
+                        <div class="shipment-details">
+                            <h4>Key Highlights:</h4>
+                            <ul>
+                                <li><strong>Component:</strong> STM32F407ZET6</li>
+                                <li><strong>Quantity:</strong> 36,000 units</li>
+                                <li><strong>Origin:</strong> STMicroelectronics (Taiwan, China)</li>
+                                <li><strong>Destination:</strong> Top 3 EMS in Brazil</li>
+                                <li><strong>Service:</strong> Direct shipment with full certification</li>
+                            </ul>
+                        </div>
+
+                        <h3>Our STMicroelectronics Advantage</h3>
+                        <p>Digisino maintains a strategic partnership with STMicroelectronics supply channels, giving us priority access to popular MCUs like the STM32F series. This relationship enables us to provide:</p>
+
+                        <div class="shipment-details">
+                            <h4>Specialized Capabilities:</h4>
+                            <ul>
+                                <li>Consistent supply of STM32F series microcontrollers</li>
+                                <li>Competitive pricing for the Brazilian market</li>
+                                <li>Fast air shipping to South America</li>
+                                <li>Localized technical support</li>
+                                <li>End-to-end traceability</li>
+                            </ul>
+                        </div>
+
+                        <p>This shipment reinforces Digisino's position as a leading supplier to Brazil's electronics manufacturing sector. The STM32F407ZET6's combination of performance and energy efficiency makes it ideal for Brazil's growing industrial automation and IoT applications.</p>
+
+                        <p>We invite electronics manufacturers in Brazil and worldwide to leverage our expertise in STMicroelectronics products. With direct factory relationships and specialized logistics channels, Digisino can solve your most challenging component sourcing requirements.</p>
+
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="/contact.html" class="btn">Contact Us for STM32 Solutions</a>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 40px;">
+                            <a href="/news.html" class="back-to-news">
+                                <i class="fas fa-arrow-left"></i> Back to News
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="social-share">
+                        <div class="share-title">Share this post:</div>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.cwsemi.com%2Fnews%2Fnews-20250718.html"
+                           target="_blank"
+                           class="share-btn facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.cwsemi.com%2Fnews%2Fnews-20250718.html&text=Check%20out%20the%20latest%20news%20from%20Digisino%20Electronics"
+                           target="_blank"
+                           class="share-btn twitter">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.cwsemi.com%2Fnews%2Fnews-20250718.html&title=Digisino%20Electronics%20News"
+                           target="_blank"
+                           class="share-btn linkedin">
+                            <i class="fab fa-linkedin-in"></i> LinkedIn
+                        </a>
+                        <a href="https://api.whatsapp.com/send?text=Read%20the%20latest%20news%20from%20Digisino%20Electronics:%20https%3A%2F%2Fwww.cwsemi.com%2Fnews%2Fnews-20250718.html"
+                           target="_blank"
+                           class="share-btn whatsapp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+<!-- <script src="/js/main.js" defer></script> -->
+</body>
+</html>
