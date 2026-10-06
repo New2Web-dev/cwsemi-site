@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Information - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Secure payment methods and bank account information for Digisino Electronics. Verify our payment details to avoid scams.">
+    <meta name="keywords" content="electronic components payment, bank account, Digisino payment, payment security">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== Payment 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/payment-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* Payment Content */
+        .payment-content {
+            padding: 80px 0;
+        }
+        .payment-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .payment-card {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 50px;
+            margin-bottom: 50px;
+        }
+        .payment-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        /* Security Alert */
+        .security-alert {
+            background: #fff8e6;
+            border-left: 4px solid #ffc107;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-radius: 0 8px 8px 0;
+        }
+        .security-alert h3 {
+            color: #d39e00;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .security-alert p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Account Info */
+        .account-info {
+            margin: 40px 0;
+        }
+        .account-info h3 {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .info-item {
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .info-value {
+            font-size: 1.1rem;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        /* Payment Memo */
+        .payment-memo {
+            background: rgba(0, 111, 66, 0.08);
+            padding: 30px;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+        .payment-memo h4 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .payment-memo p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        .memo-example {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px dashed var(--primary-color);
+            margin-top: 15px;
+            font-family: monospace;
+        }
+
+        /* Additional Options */
+        .additional-options {
+            margin-top: 40px;
+        }
+        .additional-options h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+
+        /* Verification Process */
+        .verification-process {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .verification-process h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .verification-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .verification-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .step-text {
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* ===== Payment 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+            .payment-card {
+                padding: 40px 30px;
+            }
+            .verification-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .payment-card {
+                padding: 30px 20px;
+            }
+            .verification-process {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Payment Information</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="#">Information</a></li>
+                <li>Payment Information</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Payment Content -->
+    <section class="payment-content">
+        <div class="container">
+            <div class="payment-container">
+                <div class="payment-card">
+                    <h2>Secure Payment Methods</h2>
+
+                    <div class="security-alert">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Important Security Notice</h3>
+                        <p>Please be advised that Digisino Electronics Limited has only <strong>ONE</strong> official bank account for receiving payments. Due to increasing fraudulent activities, we strongly recommend verifying our account details with us before making any payment.</p>
+                        <p>The safest method is to email <a href="mailto:info@digisino.com">info@digisino.com</a> to confirm our current bank account information prior to transferring funds.</p>
+                    </div>
+
+                    <div class="account-info">
+                        <h3>Our Bank Account Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Account Number</div>
+                                <div class="info-value">63001385627</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Holder Name</div>
+                                <div class="info-value">DIGISINO ELECTRONICS LIMITED</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Bank Name</div>
+                                <div class="info-value">JPMorgan Chase Bank N.A. Hong Kong Branch</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Country</div>
+                                <div class="info-value">HONG KONG, CHINA</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Bank Address</div>
+                                <div class="info-value">CHATER HOUSE, 8 CONNAUGHT ROAD, CENTRAL, HONG KONG</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Account Type</div>
+                                <div class="info-value">Current</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Swift/BIC</div>
+                                <div class="info-value">CHASHKHH (CHASHKHHXXX，If 11 characters are required)</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Routing Number</div>
+                                <div class="info-value">007863</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Bank Code</div>
+                                <div class="info-value">007</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Branch Number</div>
+                                <div class="info-value">863</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-memo">
+                        <h4>Payment Memo/Message Requirement</h4>
+                        <p>To ensure proper allocation of your payment, please include the following information in the memo/message field when making a payment:</p>
+                        <div class="memo-example">[Buyer Name][Invoice/Contract Number][Product]</div>
+                        <p>Example: <code>ABCCompany INV-2023-0015 STM32F407VGT6</code></p>
+                    </div>
+
+                    <div class="additional-options">
+                        <h3>Additional Payment Options</h3>
+                        <p>If you require other payment methods (such as credit card, PayPal, or cryptocurrency) or need to make payments in currencies other than USD, please contact us at <a href="mailto:info@digisino.com">info@digisino.com</a>. Our finance team will assist you with alternative arrangements.</p>
+                    </div>
+
+                    <div class="verification-process">
+                        <h3>Payment Verification Process</h3>
+                        <p>To protect your transactions, we recommend following this verification process:</p>
+
+                        <div class="verification-steps">
+                            <div class="verification-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="step-number">1</div>
+                                <div class="step-text">Email us at info@digisino.com requesting current payment details</div>
+                            </div>
+
+                            <div class="verification-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="step-number">2</div>
+                                <div class="step-text">Wait for our official confirmation with verified bank details</div>
+                            </div>
+
+                            <div class="verification-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-money-check-alt"></i>
+                                </div>
+                                <div class="step-number">3</div>
+                                <div class="step-text">Make payment to the verified account with required memo</div>
+                            </div>
+
+                            <div class="verification-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div class="step-number">4</div>
+                                <div class="step-text">Email payment receipt to accounts@digisino.com for confirmation</div>
+                            </div>
+                        </div>
+
+                        <a href="mailto:info@digisino.com" class="btn btn-outline" style="background: var(--white); color: var(--primary-color);">Verify Payment Details Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+</body>
+</html>

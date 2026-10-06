@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extensive Line Cards - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Explore Digisino's extensive line cards of over 100 leading electronic component manufacturers. Connect directly with top brands.">
+    <meta name="keywords" content="electronic components manufacturers, semiconductor suppliers, IC manufacturers, electronic component distributors">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== Line Cards 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/linecards-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* Alphabet Filter */
+        .alphabet-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 40px 0 30px;
+            padding: 0 15px;
+        }
+        .alphabet-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-light);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .alphabet-btn:hover,
+        .alphabet-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+        .alphabet-btn.all-btn {
+            width: auto;
+            padding: 0 20px;
+            border-radius: 30px;
+        }
+
+        .alphabet-section {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+        .alphabet-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .alphabet-section .alphabet-filter {
+            margin: 0;
+        }
+
+        /* Manufacturers Section */
+        .manufacturers-section {
+            padding: 40px 0 80px;
+        }
+        .manufacturers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .manufacturer-card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+        .manufacturer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-light);
+        }
+        .manufacturer-logo {
+            width: 80px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f5f5f5;
+        }
+        .manufacturer-logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .manufacturer-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        /* ===== Line Cards 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .manufacturers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .alphabet-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            .manufacturer-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Extensive Line Cards</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li>Extensive Line Cards</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Alphabet Filter -->
+    <div class="alphabet-section">
+        <div class="container">
+            <h3>Filter by Alphabet</h3>
+            <div class="alphabet-filter">
+                <div class="alphabet-btn all-btn active" data-letter="all">ALL</div>
+                <div class="alphabet-btn" data-letter="A">A</div>
+                <div class="alphabet-btn" data-letter="B">B</div>
+                <div class="alphabet-btn" data-letter="C">C</div>
+                <div class="alphabet-btn" data-letter="D">D</div>
+                <div class="alphabet-btn" data-letter="E">E</div>
+                <div class="alphabet-btn" data-letter="F">F</div>
+                <div class="alphabet-btn" data-letter="G">G</div>
+                <div class="alphabet-btn" data-letter="H">H</div>
+                <div class="alphabet-btn" data-letter="I">I</div>
+                <div class="alphabet-btn" data-letter="J">J</div>
+                <div class="alphabet-btn" data-letter="K">K</div>
+                <div class="alphabet-btn" data-letter="L">L</div>
+                <div class="alphabet-btn" data-letter="M">M</div>
+                <div class="alphabet-btn" data-letter="N">N</div>
+                <div class="alphabet-btn" data-letter="O">O</div>
+                <div class="alphabet-btn" data-letter="P">P</div>
+                <div class="alphabet-btn" data-letter="Q">Q</div>
+                <div class="alphabet-btn" data-letter="R">R</div>
+                <div class="alphabet-btn" data-letter="S">S</div>
+                <div class="alphabet-btn" data-letter="T">T</div>
+                <div class="alphabet-btn" data-letter="U">U</div>
+                <div class="alphabet-btn" data-letter="V">V</div>
+                <div class="alphabet-btn" data-letter="W">W</div>
+                <div class="alphabet-btn" data-letter="X">X</div>
+                <div class="alphabet-btn" data-letter="Y">Y</div>
+                <div class="alphabet-btn" data-letter="Z">Z</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manufacturers Section -->
+    <section class="manufacturers-section">
+        <div class="container">
+            <div class="manufacturers-grid" id="manufacturersContainer">
+                <!-- Manufacturers will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+    <!-- Line Cards 筛选脚本 -->
+    <script src="/js/linecards.js" defer></script>
+</body>
+</html>

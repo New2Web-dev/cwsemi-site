@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Digisino - Your Trusted Electronic Components Partner</title>
+    <meta name="description" content="Get in touch with Digisino for inquiries about electronic components. Our team is ready to assist you with your sourcing needs.">
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="keywords" content="contact Digisino, electronic components supplier, Digisino contact, component distributor">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== Contact 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/contact-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 120px 0 80px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+        }
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .contact-info-card {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+        }
+        .contact-info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        .contact-info-card p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 111, 66, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        .contact-info-card:hover .contact-icon {
+            transform: scale(1.1);
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        .contact-details {
+            margin: 30px 0;
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .contact-item i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            min-width: 24px;
+            padding-top: 4px;
+        }
+        .social-contact {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .social-contact a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        .social-contact a:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Address Card */
+        .address-card {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .address-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+        }
+        .address-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        .office {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 8px;
+            background: rgba(0, 111, 66, 0.03);
+            transition: var(--transition);
+        }
+        .office:hover {
+            background: rgba(0, 111, 66, 0.08);
+            transform: translateY(-5px);
+        }
+        .office h4 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .office h4 i {
+            color: var(--primary-color);
+        }
+        .office p {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .address-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 111, 66, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        .working-hours {
+            background: rgba(0, 111, 66, 0.05);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .working-hours h4 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .working-hours h4 i {
+            color: var(--primary-color);
+        }
+        .hours-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .hour-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== Contact 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .contact-info-card,
+            .address-card {
+                padding: 30px 20px;
+            }
+            .office {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Digisino</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li>Contact Digisino</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-container">
+                <!-- Contact Information Card -->
+                <div class="contact-info-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Get In Touch</h3>
+                    <p>Digisino - Only New and Original Electronic Components Supplier</p>
+
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+86 130 2887 0326</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>info@digisino.com</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <h4>Website</h4>
+                                <p>www.cwsemi.com / www.digisino.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-contact">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Address Card -->
+                <div class="address-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Our Locations</h3>
+
+                    <!-- Hong Kong Office -->
+                    <div class="office">
+                        <div class="address-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <h4><i class="fas fa-map-pin"></i> Warehouse Address</h4>
+                        <p>Unit 811, Beverley Commercial Centre</p>
+                        <p>87-105 Chatham Road South</p>
+                        <p>Tsim Sha Tsui, Kowloon</p>
+                        <p>Hong Kong</p>
+                    </div>
+
+                    <!-- Shenzhen Office -->
+                    <div class="office">
+                        <div class="address-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h4><i class="fas fa-map-pin"></i> Office Address</h4>
+                        <p>61F, SEG Tower</p>
+                        <p>Shennan Middle Road, Futian District</p>
+                        <p>518031 Shenzhen, China</p>
+                    </div>
+
+                    <!-- Working Hours -->
+                    <div class="working-hours">
+                        <h4><i class="fas fa-clock"></i> Working Hours</h4>
+                        <div class="hours-list">
+                            <div class="hour-item">
+                                <span>Monday - Friday</span>
+                                <span>9:00 AM - 7:00 PM</span>
+                            </div>
+                            <div class="hour-item">
+                                <span>Saturday</span>
+                                <span>10:00 AM - 5:00 PM</span>
+                            </div>
+                            <div class="hour-item">
+                                <span>Sunday</span>
+                                <span>Closed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+</body>
+</html>

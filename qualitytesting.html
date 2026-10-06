@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Testing - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Digisino's rigorous quality testing procedures ensure authentic electronic components. Learn about our testing methods and quality guarantees.">
+    <meta name="keywords" content="electronic components quality testing, counterfeit prevention, component authentication, AS6081, electronic component testing">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== Quality Testing 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/quality-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* Content Section */
+        .quality-content {
+            padding: 80px 0;
+        }
+        .content-block {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        .content-block h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        .content-block p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .content-block ul {
+            padding-left: 20px;
+            margin-bottom: 25px;
+            list-style: none;
+        }
+        .content-block li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+        }
+        .content-block li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-light);
+            border-radius: 50%;
+        }
+
+        /* Testing Table */
+        .testing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .testing-table th {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .testing-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .testing-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .testing-table tr:last-child td {
+            border-bottom: none;
+        }
+        .free-test {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .paid-test {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* Definitions */
+        .definition-list {
+            margin-top: 30px;
+        }
+        .definition-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        .definition-item:last-child {
+            border-bottom: none;
+        }
+        .definition-term {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .definition-description {
+            margin-bottom: 0;
+        }
+
+        /* ===== Quality Testing 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .content-block {
+                padding: 30px;
+            }
+            .testing-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .content-block {
+                padding: 20px;
+            }
+            .content-block h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Quality Testing</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="#">New & Original Quality</a></li>
+                <li>Quality Testing</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Quality Testing Content -->
+    <section class="quality-content">
+        <div class="container">
+            <div class="content-block">
+                <h3>Our Rigorous Testing Procedures</h3>
+                <p>No matter how reliable the surface of the goods looks, we will conduct a series of tests by ourself, or entrust a professional third-party testing organization for testing, such as: Solderability test, to prevent oxidation and ensure the reliability of soldering; Marking permanency test, to prevent refurbished parts. X-Ray test will also come if needed, etc.</p>
+                <p>You can find out the following procedures to test the sold parts.</p>
+
+                <table class="testing-table">
+                    <thead>
+                        <tr>
+                            <th>Test Performed</th>
+                            <th>Free</th>
+                            <th>Additional Charge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>External Visual Inspection</td>
+                            <td class="free-test">✓ Included</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Solderability Inspection</td>
+                            <td class="free-test">✓ Included</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>HCT-Chemical Wipe Inspection</td>
+                            <td class="free-test">✓ Included</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Program Blank Inspection</td>
+                            <td class="free-test">✓ Included</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Functional / Electrical Performance Inspection</td>
+                            <td></td>
+                            <td class="paid-test">Charged</td>
+                        </tr>
+                        <tr>
+                            <td>XRF-Lead-Free Analysis</td>
+                            <td></td>
+                            <td class="paid-test">Charged</td>
+                        </tr>
+                        <tr>
+                            <td>X-Ray Inspection</td>
+                            <td></td>
+                            <td class="paid-test">Charged</td>
+                        </tr>
+                        <tr>
+                            <td>Anatomical Inspection</td>
+                            <td></td>
+                            <td class="paid-test">Charged</td>
+                        </tr>
+                        <tr>
+                            <td>Detailed Test Report</td>
+                            <td></td>
+                            <td class="paid-test">Charged</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-block">
+                <h3>Definitions (as defined within AS6081)</h3>
+                <div class="definition-list">
+                    <div class="definition-item">
+                        <div class="definition-term">Known Authentic Part (Golden Sample)</div>
+                        <p class="definition-description">A part which has either been purchased directly from the manufacturer, their authorized distributors, or authenticated by the manufacturer with supporting documentation.</p>
+                    </div>
+
+                    <div class="definition-item">
+                        <div class="definition-term">Unused</div>
+                        <p class="definition-description">Electronic parts that have not been previously used (i.e., attached to a board or powered up since leaving the supply chain). Unused material can contain mixed date codes, lot codes, or countries of origin, and should be received in original factory or third-party packaging. The material may have minor scratches or other physical defects as a result of handling, but the leads should be in good condition and should not be refurbished. The material should be guaranteed to meet the manufacturer's full specifications. Unused Programmable parts should be received without having been previously programmed.</p>
+                    </div>
+
+                    <div class="definition-item">
+                        <div class="definition-term">Used (Refurbished or Pulled)</div>
+                        <p class="definition-description">Product that has been electrically charged and subsequently pulled or removed from a socket or other electronic application. Used product may be received in non-standard packaging, and may contain mixed lots, date codes, be from different facilities, etc. Parts may have physical defects such as scratches, slightly been leads, test dots, faded marking, chemical residue or other signs of use, but the lead should be intact. Used product may be sold with a limited warranty, and programmable parts may still contain partial or complete programming which could impact the part's functionality.</p>
+                    </div>
+
+                    <div class="definition-item">
+                        <div class="definition-term">Refurbished</div>
+                        <p class="definition-description">Parts that have been renovated to restore them to as like new condition, e.g., leaded parts may have had their leads realigned and re-tinned and subjected to cleaning agents and chemical processing.</p>
+                    </div>
+
+                    <div class="definition-item">
+                        <div class="definition-term">Counterfeit Parts</div>
+                        <p class="definition-description">A fraudulent part that has been confirmed to be a copy, imitation, or substitute that has been represented, identified, or marked as genuine, and/or altered by a source without legal right.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>Report Explanations</h3>
+                <p><strong>"Result"</strong> is the condition of devices, per the definitions provided by AS6081 (above) with the addition of "Remarked", which is any device who's original marking has been replaced. A device could, for example, but Unused but also have been remarked, so the Result would be "Unused/Remarked".</p>
+
+                <p><strong>"Risk Factor"</strong> is a calculation of the remaining risk of a device being counterfeit or substandard from the result of the processes conducted, and risk associated with not conducting some processes.</p>
+
+                <p>Minor observations such as scratches and loose contamination from normal handling, packaging, storage and aging are defined and available upon request.</p>
+
+                <p><strong>"FAR"</strong> in the process summary means "Further Analysis Recommend" additional tests to verify an observation found in one process, or gaps in the requested test plan, we will identify those areas of risk as "FAR".</p>
+
+                <p>Note that definitions are as defined within the AS6081 standard.</p>
+            </div>
+
+            <div class="content-block">
+                <h3>Notes and Disclaimers</h3>
+                <ul>
+                    <li>Product analysis results are applicable for the inspected samples only.</li>
+                    <li>Inspection methods are assigned Pass / Fail Criteria based upon JEDEC JES9B manufacturing standard. Military-grade products are inspected to MIL-STD specifications. Observations outside of those tolerances are deemed to make the product unfit for use.</li>
+                    <li>Observations defined by IDEA-STD-1010B, AS6081, AS6171 and Worldway expertise and used for comparison purposes to the devices analyzed for this report.</li>
+                    <li>"Known-good samples" or "Golden samples" are provided to compare to unverified products.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+</body>
+</html>

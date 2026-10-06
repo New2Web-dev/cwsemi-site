@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Digisino Electronics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)), url('/webp-images/general/news-bg.webp');
+            background-size: cover; 
+            background-position: center; 
+            color: var(--white); 
+            padding: 100px 0 60px; 
+            text-align: center;
+        }
+        .news-section { padding: 80px 0; }
+        .news-container { max-width: 900px; margin: 0 auto; }
+        
+        /* 单条新闻卡片样式：使整块卡片可点击 */
+        .news-card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 25px;
+        }
+        .news-item {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .news-card-link:hover .news-item {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .news-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .news-index {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .news-date {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+        }
+        .news-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 5px 0 10px 0;
+            line-height: 1.4;
+        }
+        .news-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .news-card-link:hover .news-read-more {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* 分页组件样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 50px;
+        }
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+        .pagination-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉 -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <img src="/webp-images/general/logo.webp" alt="Digisino Electronics Logo">
+                </a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/products.html">Products</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/news.html" class="active">News</a></li>
+                        <li><a href="/contact.html">Contact Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>News & Updates</h1>
+        </div>
+    </section>
+
+    <section class="news-section">
+        <div class="container">
+            <div class="news-container" id="newsList">
+                <!-- 新闻列表由下方脚本动态渲染 -->
+            </div>
+            <!-- 分页按钮控件 -->
+            <div class="pagination" id="newsPagination"></div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; Digisino Electronics Limited. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js" defer></script>
+    <script>
+        (function () {
+            const ITEMS_PER_PAGE = 30; // 每页固定30篇
+            const listEl = document.getElementById('newsList');
+            const paginationEl = document.getElementById('newsPagination');
+
+            if (!listEl || !paginationEl) return;
+
+            // 获取新闻索引
+            fetch('/content/news-index.json')
+                .then(response => response.json())
+                .then(allNews => {
+                    // 按日期从新到旧排序
+                    const sortedNews = allNews.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+                    const totalPages = Math.max(1, Math.ceil(sortedNews.length / ITEMS_PER_PAGE));
+
+                    function getPageFromHash() {
+                        const match = window.location.hash.match(/page=(\d+)/);
+                        if (match) {
+                            const p = parseInt(match[1], 10);
+                            if (p >= 1 && p <= totalPages) return p;
+                        }
+                        return 1;
+                    }
+
+                    function renderPage(page) {
+                        listEl.innerHTML = '';
+
+                        if (sortedNews.length === 0) {
+                            listEl.innerHTML = '<div style="text-align:center; padding:40px;">No news available.</div>';
+                            paginationEl.innerHTML = '';
+                            return;
+                        }
+
+                        const startIndex = (page - 1) * ITEMS_PER_PAGE;
+                        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedNews.length);
+
+                        for (let i = startIndex; i < endIndex; i++) {
+                            const news = sortedNews[i];
+                            const displayIndex = i + 1;
+                            const articleUrl = `/news/detail.html?id=${news.id}`;
+
+                            // 整条包裹成链接，实现全区域点击跳转
+                            const cardLink = document.createElement('a');
+                            cardLink.className = 'news-card-link';
+                            cardLink.href = articleUrl;
+
+                            cardLink.innerHTML = `
+                                <div class="news-item">
+                                    <div class="news-header-meta">
+                                        <span class="news-index">${displayIndex}.</span>
+                                        <span class="news-date">${news.displayDate}</span>
+                                    </div>
+                                    <div class="news-title">${news.title}</div>
+                                    <div class="news-read-more">READ FULL STORY <i class="fas fa-arrow-right"></i></div>
+                                </div>
+                            `;
+                            listEl.appendChild(cardLink);
+                        }
+
+                        renderPagination(page);
+                    }
+
+                    function renderPagination(currentPage) {
+                        paginationEl.innerHTML = '';
+                        if (totalPages <= 1) return;
+
+                        // 上一页
+                        const prevBtn = document.createElement('button');
+                        prevBtn.className = 'pagination-btn';
+                        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Prev';
+                        prevBtn.disabled = currentPage === 1;
+                        prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
+                        paginationEl.appendChild(prevBtn);
+
+                        // 页码
+                        for (let p = 1; p <= totalPages; p++) {
+                            const btn = document.createElement('button');
+                            btn.className = 'pagination-btn' + (p === currentPage ? ' active' : '');
+                            btn.textContent = p;
+                            btn.addEventListener('click', () => goToPage(p));
+                            paginationEl.appendChild(btn);
+                        }
+
+                        // 下一页
+                        const nextBtn = document.createElement('button');
+                        nextBtn.className = 'pagination-btn';
+                        nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+                        nextBtn.disabled = currentPage === totalPages;
+                        nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
+                        paginationEl.appendChild(nextBtn);
+                    }
+
+                    function goToPage(page) {
+                        if (page < 1 || page > totalPages) return;
+                        window.location.hash = 'page=' + page;
+                    }
+
+                    window.addEventListener('hashchange', function () {
+                        renderPage(getPageFromHash());
+                        listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+
+                    renderPage(getPageFromHash());
+                })
+                .catch(err => {
+                    listEl.innerHTML = '<div style="text-align:center; padding:40px;">Failed to load news list.</div>';
+                });
+        })();
+    </script>
+</body>
+</html>

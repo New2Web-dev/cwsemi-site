@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Guarantee - Digisino Electronics</title>
+    <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
+    <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
+    <meta name="description" content="Digisino's quality guarantee ensures authentic electronic components with a 1-year warranty. Learn about our guarantee terms and conditions.">
+    <meta name="keywords" content="electronic components warranty, quality guarantee, component replacement, counterfeit prevention, electronic component distributor">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== Quality Guarantee 页面专属样式 ===== */
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
+                        url('/webp-images/general/quality-bg.webp');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0 60px;
+            text-align: center;
+            min-height: 40vh;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumb li:not(:last-child):after {
+            content: '/';
+            margin: 0 15px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .breadcrumb a:hover {
+            color: var(--white);
+        }
+
+        /* Content Section */
+        .guarantee-content {
+            padding: 80px 0;
+        }
+        .content-block {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        .content-block h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        .content-block p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .content-block ul {
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+        .content-block li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        .content-block li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-light);
+            border-radius: 50%;
+        }
+
+        .highlight-box {
+            background: rgba(0, 111, 66, 0.08);
+            border-left: 4px solid var(--primary-color);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .terms-list {
+            counter-reset: terms-counter;
+        }
+        .terms-list li {
+            counter-increment: terms-counter;
+            padding-left: 40px;
+            list-style: none;
+        }
+        .terms-list li:before {
+            content: counter(terms-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .terms-list li ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        .terms-list li ul li {
+            padding-left: 25px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .terms-list li ul li:before {
+            content: '';
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-light);
+        }
+
+        .contact-reminder {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: var(--primary-light);
+            color: var(--white);
+            border-radius: 10px;
+        }
+        .contact-reminder h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .contact-reminder p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        /* ===== Quality Guarantee 页面响应式 ===== */
+        @media (max-width: 991.98px) {
+            .page-header {
+                padding: 80px 0 50px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .content-block {
+                padding: 30px;
+            }
+            .content-block li {
+                padding-left: 25px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .page-header {
+                padding: 60px 0 30px;
+                min-height: 35vh;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .content-block {
+                padding: 20px;
+            }
+            .content-block h3 {
+                font-size: 1.5rem;
+            }
+            .terms-list li:before {
+                width: 25px;
+                height: 25px;
+            }
+            .contact-reminder {
+                padding: 20px;
+            }
+            .contact-reminder h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container top-header-container">
+            <div class="top-header-features">
+                <span>Welcome to Digisino Electronics Limited</span>
+                <span>Secure Sources</span>
+                <span>Competitive Price</span>
+                <span>Cost Down Solutions</span>
+            </div>
+            <div class="top-header-contact">
+                <i class="fas fa-envelope"></i> info@digisino.com
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-container">
+                    <img src="/svg-logos/digisino-logo.svg" alt="Digisino Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span>Electronic Components Distributor</span>
+                    </div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="/index.html" class="nav-link">Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="https://www.cwsemi.com/products" class="nav-link">PRODUCT CENTER</a>
+                    </li>
+                    <li class="nav-item"><a href="/linecards.html" class="nav-link">Extensive Line Cards</a></li>
+                    <li class="nav-item"><a href="/rfq.html" class="nav-link">RFQ/BOM Service</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact Digisino</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Information</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/delivery.html" class="dropdown-item">Delivery Information</a></li>
+                            <li><a href="/payment.html" class="dropdown-item">Payment Information</a></li>
+                            <li><a href="/qualitytesting.html" class="dropdown-item">Quality Testing</a></li>
+                            <li><a href="/qualityguarantee.html" class="dropdown-item">Quality Guarantee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/news.html" class="nav-link">News</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Quality Guarantee</h1>
+            <ul class="breadcrumb">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="#">New & Original Quality</a></li>
+                <li>Quality Guarantee</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Quality Guarantee Content -->
+    <section class="guarantee-content">
+        <div class="container">
+            <div class="content-block">
+                <h3>Our Commitment to Quality</h3>
+                <p>When a Customer orders products from Digisino, Digisino issues 1 year warranty to Buyer that the products shall perform in the manner described in manufacturer's datasheet as of the date of manufacture. This guarantee is limited to the replacement of the electronic component(s) or refund of the purchase price, subject to the following terms and conditions:</p>
+
+                <ol class="terms-list">
+                    <li>The Purchaser must notify Digisino within 14 days of the alleged failure of the electronic components covered by this Guarantee with:
+                        <ul>
+                            <li>written notification that Purchaser is invoking its rights under the guarantee;</li>
+                            <li>the electronic component(s) that the Purchaser claims have failed;</li>
+                            <li>a detailed written failure analysis report.</li>
+                        </ul>
+                        After checking, Digisino's representative will arrange a Return Material Authorization to Start the return procedure.
+                    </li>
+
+                    <li><strong>Counterfeit Product Prevention Clause</strong><br>
+                        Only products originally shipped from Digisino or from a supplier at Digisino's direction (drop-ship) will be returned to Digisino. All others will be promptly quarantined and disposed of or returned to the Customer. By a Customer returning products to Digisino, the Customer certifies that the products were purchased from Digisino and there has been no substitution in whole or part of same product from another supplier, distributor or other such source of the product. The return should be in the original packaging (manufacturer or Digisino), in unused and untested condition (except defective). ESD, programmable semiconductors, or moisture sensitive products should not be opened.
+                    </li>
+
+                    <li>This Guarantee does not apply to, and expressly excludes, the failure of any electronic component caused by the Purchaser's negligence, misuse (including misuse relating to the handling, storage, transportation, or installation of the electronic component), or use that is inconsistent with the manufacturer's recommended use of the electronic component.</li>
+
+                    <li>This Guarantee shall not apply if an independent third party testing laboratory, designated by Digisino, determines that the products perform in the manner described in the manufacturer's datasheet as of the date of manufacture. The cost of testing shall be paid by Buyer. The conclusion of such independent third party shall be conclusive in determining the parties' rights under this Guarantee.</li>
+
+                    <li>The validity, enforcement, construction, and interpretation of this Guarantee are governed by the contract laws of HongKong, excluding the laws of those jurisdictions pertaining to resolution of conflicts with laws of other jurisdictions.</li>
+
+                    <li>This Guarantee is void where prohibited by contract law of HongKong.</li>
+
+                    <li>Digisino is not liable under this Guarantee for any damages or losses of any kind, whatsoever, including but not limited to consequential, punitive, or exemplary damages, whether arising under statute, common law, or equity. Nor is Digisino liable for any damages or losses related to or harm caused to products, loss of use, loss of data, downtime, procurement of substitute goods, loss of revenue, loss of profits, or loss of goodwill.</li>
+
+                    <li>These terms and conditions supplement, and do not supersede, the terms and conditions set forth on the invoice describing the electronic component being returned by the Purchaser under this Guarantee. In the event of any conflict between these terms and conditions and the terms and conditions on the invoice describing the electronic component being returned by the Purchaser under this Guarantee, these terms and conditions shall control.</li>
+                </ol>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Important Notice</h3>
+                <p>This Quality Guarantee is our commitment to providing you with authentic and reliable electronic components. We take all necessary measures to ensure the components we supply meet the highest standards of quality and authenticity.</p>
+                <p>For any claims under this guarantee, please contact us immediately upon discovering any issues to ensure we can resolve them according to our terms.</p>
+            </div>
+
+            <div class="contact-reminder">
+                <h3>Need Assistance with a Quality Claim?</h3>
+                <p>Our team is ready to help you with any quality concerns or guarantee claims.</p>
+                <a href="/contact.html" class="btn btn-outline" style="background: var(--white); color: var(--primary-color);">Contact Our Quality Team</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/+8613028870326" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column footer-about">
+                    <h4>About Digisino</h4>
+                    <p>We are a premier distributor of electronic components, committed to providing new and original parts with competitive pricing and reliable service.</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 130 2887 0326</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digisino.com</span>
+                        </div>
+                        <p>We will reply within 24 hours</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quality</h4>
+                    <div class="footer-links">
+                        <a href="/qualitytesting.html">Quality Testing</a>
+                        <a href="/qualityguarantee.html">Quality Guarantee</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Information</h4>
+                    <div class="footer-links">
+                        <a href="/delivery.html">Delivery Information</a>
+                        <a href="/payment.html">Payment Information</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect With Us</h4>
+                    <p>Follow us on social media for updates and news.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61561909239269" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/digisino.electronics/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/+8613028870326" class="social-link" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; <span id="currentYear"></span> Digisino Electronics Limited. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 公共脚本 -->
+    <script src="/js/main.js" defer></script>
+</body>
+</html>
