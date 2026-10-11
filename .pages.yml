@@ -1,25 +1,23 @@
-media:
-  input: webp-images/content
-  output: /webp-images/content
-
+media: webp-images/content
 content:
   - name: news
-    label: News & Updates
-    type: collection
+    label: News Management
     path: content/news
+    type: collection
     fields:
       - name: title
-        label: Article Title
+        label: News Title
         type: string
         required: true
       - name: date
-        label: Publication Date
-        type: string
+        label: Publish Date
+        type: date
         required: true
-      - name: description
-        label: SEO Meta Description
-        type: string
+      - name: image
+        label: Featured Image
+        type: image
+        required: false
       - name: body
-        label: Content Body
+        label: News Content
         type: rich-text
         required: true
