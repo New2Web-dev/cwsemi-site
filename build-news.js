@@ -8,45 +8,40 @@ if (!fs.existsSync(htmlNewsDir)) {
     fs.mkdirSync(htmlNewsDir, { recursive: true });
 }
 
-// 强力内容解析器：完美处理富文本 HTML 以及 Markdown 图文混排
-function convertContent(content) {
-    if (!content) return '';
+// 专门解析 PagesCMS Markdown 源码的转换函数
+function parseMarkdown(md) {
+    if (!md) return '';
     
-    // 如果内容已经是 HTML 标签（如 <p> 或 <img>），直接返回
-    if (content.trim().startsWith('<')) {
-        return content;
-    }
-
-    // 否则将其作为 Markdown 语法进行解析
-    return content
-        // 转换图片 ![alt](url) -> <img src="url" alt="alt">
+    let html = md
+        // 1. 转换图片：![](/path/to/img.webp) -> <img src="/path/to/img.webp" alt="News Image">
         .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
-        // 转换超链接 [text](url) -> <a href="url" target="_blank">text</a>
+        // 2. 转换超链接：[text](url) -> <a href="url" target="_blank">text</a>
         .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
-        // 标题转换
+        // 3. 标题
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
         .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        // 粗体
+        // 4. 粗体与斜体
         .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-        // 斜体
-        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
-        // 段落与换行处理
-        .split(/\n\s*\n/)
-        .map(p => {
-            p = p.trim();
-            if (!p) return '';
-            if (p.startsWith('<h') || p.startsWith('<img') || p.startsWith('<div') || p.startsWith('<ul')) {
-                return p;
-            }
-            return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
-        })
-        .join('\n');
+        .replace(/\*(.*?)\*/gim, '<em>$1</em>');
+
+    // 5. 处理段落分段（根据空行分隔）
+    const paragraphs = html.split(/\n\s*\n/);
+    return paragraphs.map(p => {
+        p = p.trim();
+        if (!p) return '';
+        // 如果已经是 HTML 标签开头，则直接保留
+        if (p.startsWith('<h') || p.startsWith('<img') || p.startsWith('<div') || p.startsWith('<ul') || p.startsWith('<p')) {
+            return p;
+        }
+        // 普通文本包裹成段落，并把单行换行转为 <br>
+        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
 }
 
 let allNewsItems = [];
 
-// 仅读取 PagesCMS 生成的 Markdown (.md) 文件
+// 读取 PagesCMS 生成的 Markdown (.md) 文件
 if (fs.existsSync(newsDir)) {
     const mdFiles = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
     mdFiles.forEach(file => {
@@ -78,7 +73,8 @@ if (fs.existsSync(newsDir)) {
             year: 'numeric' 
         });
 
-        const bodyHtml = convertContent(rawBody);
+        // 核心：使用解析器将 Markdown 转成漂亮的 HTML
+        const bodyHtml = parseMarkdown(rawBody);
 
         allNewsItems.push({
             slug,
@@ -96,7 +92,7 @@ if (fs.existsSync(newsDir)) {
 // 按日期降序排序
 allNewsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// 生成所有详情页（包含上下篇导航）
+// 生成详情页
 allNewsItems.forEach((news, index) => {
     const fullUrl = `https://www.cwsemi.com${news.url}`;
     const newerIndex = index - 1;
@@ -234,7 +230,7 @@ allNewsItems.forEach((news, index) => {
     fs.writeFileSync(path.join(htmlNewsDir, news.htmlFileName), detailHtml);
 });
 
-// 同步更新 news.html 中的 allNews 数组（只包含通过 PagesCMS 发布的文章）
+// 同步更新 news.html
 const newsHtmlPath = path.join(__dirname, 'news.html');
 if (fs.existsSync(newsHtmlPath)) {
     let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
@@ -252,4 +248,4 @@ if (fs.existsSync(newsHtmlPath)) {
     fs.writeFileSync(newsHtmlPath, newsHtmlContent);
 }
 
-console.log('Build completed successfully, driven strictly by PagesCMS markdown content.');
+console.log('Build completed successfully with proper Markdown parsing for images and paragraphs.');
