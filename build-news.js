@@ -2,48 +2,18 @@ const fs = require('fs');
 const path = require('path');
 
 const newsDir = path.join(__dirname, 'content/news');
-const outputDir = path.join(__dirname, 'news');
+const htmlNewsDir = path.join(__dirname, 'news');
 
-if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+if (!fs.existsSync(htmlNewsDir)) {
+    fs.mkdirSync(htmlNewsDir, { recursive: true });
 }
 
-// 增强版 Markdown 转 HTML 转换器（完美支持图片、标题、列表、引用框等）
-function parseMarkdownToHtml(md) {
-    if (!md) return '';
-    let html = md
-        // 转换图片 ![alt](src)
-        .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
-        // 转换超链接 [text](url)
-        .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
-        // 标题
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        // 粗体和斜体
-        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
-        // 引用块 (Award 样式区块支持)
-        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>');
+let allNewsItems = [];
 
-    // 处理段落换行
-    const paragraphs = html.split(/\n\s*\n/);
-    return paragraphs.map(p => {
-        p = p.trim();
-        if (!p) return '';
-        if (p.startsWith('<h') || p.startsWith('<img') || p.startsWith('<div') || p.startsWith('<block') || p.startsWith('<ul')) {
-            return p;
-        }
-        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
-    }).join('\n');
-}
-
+// 1. 读取 PagesCMS 生成的 Markdown (.md) 文件
 if (fs.existsSync(newsDir)) {
-    const files = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
-    let rawNewsList = [];
-
-    // 1. 先读取所有文章数据
-    files.forEach(file => {
+    const mdFiles = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
+    mdFiles.forEach(file => {
         const filePath = path.join(newsDir, file);
         const content = fs.readFileSync(filePath, 'utf8');
 
@@ -51,7 +21,7 @@ if (fs.existsSync(newsDir)) {
         if (!match) return;
 
         const headers = match[1];
-        const bodyMd = match[2];
+        const bodyHtml = match[2].trim(); // PagesCMS 输出的富文本本身就是 HTML
 
         const titleMatch = headers.match(/title:\s*(['"]?)(.*?)\1$/m);
         const dateMatch = headers.match(/date:\s*([0-9\-]+)/m);
@@ -65,50 +35,98 @@ if (fs.existsSync(newsDir)) {
         const htmlFileName = `${slug}.html`;
         const relativeUrl = `/news/${htmlFileName}`;
 
-        const [year, month, day] = date.split('-');
-        const dateObj = new Date(Date.UTC(year, month - 1, day));
-        const displayDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
+        // 修复时区导致的日期偏移问题（按本地年月日解析）
+        const [year, month, day] = date.split('-').map(Number);
+        const displayDate = new Date(year, month - 1, day).toLocaleDateString('en-US', { 
+            month: 'long', 
+            day: '2-digit', 
+            year: 'numeric' 
+        });
 
-        rawNewsList.push({
+        allNewsItems.push({
             slug,
             htmlFileName,
             date,
             displayDate,
             title,
             image,
-            bodyMd,
-            url: relativeUrl
+            bodyHtml,
+            url: relativeUrl,
+            isHtmlStatic: false
         });
     });
+}
 
-    // 2. 按日期从新到旧排序
-    rawNewsList.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // 3. 循环生成每个详情页（并计算 上一篇 / 下一篇）
-    rawNewsList.forEach((news, index) => {
-        const fullUrl = `https://www.cwsemi.com${news.url}`;
-        const bodyHtml = parseMarkdownToHtml(news.bodyMd);
-
-        // 上一篇（按倒序，数组中 index - 1 是更新的文章）
-        const newerNews = index > 0 ? rawNewsList[index - 1] : null;
-        // 下一篇（按倒序，数组中 index + 1 是更旧的文章）
-        const olderNews = index < rawNewsList.length - 1 ? rawNewsList[index + 1] : null;
-
-        // 构建上一篇/下一篇 HTML 导航条
-        let paginationHtml = `<div class="news-pagination-nav" style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; gap: 15px; flex-wrap: wrap;">`;
+// 2. 同时收录原有的静态 HTML 新闻文件（防止老新闻丢失）
+if (fs.existsSync(htmlNewsDir)) {
+    const htmlFiles = fs.readdirSync(htmlNewsDir).filter(file => file.endsWith('.html'));
+    htmlFiles.forEach(file => {
+        // 排除非新闻详情页或自动生成的页面
+        if (file === 'news.html') return;
         
-        if (olderNews) {
-            paginationHtml += `<a href="${olderNews.url}" class="prev-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px;"><i class="fas fa-arrow-left"></i> Previous: ${olderNews.title}</a>`;
-        } else {
-            paginationHtml += `<span></span>`;
+        const relativeUrl = `/news/${file}`;
+        // 避免重复收录
+        if (allNewsItems.some(item => item.url === relativeUrl)) return;
+
+        const filePath = path.join(htmlNewsDir, file);
+        const content = fs.readFileSync(filePath, 'utf8');
+
+        // 从 HTML 中提取标题和日期
+        const titleMatch = content.match(/<h[13][^>]*class="news-title"[^>]*>([\s\S]*?)<\/h[13]>/i) || content.match(/<title>([\s\S]*?)<\/title>/i);
+        const dateMatch = content.match(/<div[^>]*class="news-date"[^>]*>([\s\S]*?)<\/div>/i);
+
+        let title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : file.replace('.html', '');
+        let displayDate = dateMatch ? dateMatch[1].replace(/<[^>]+>/g, '').trim() : 'August 07, 2025';
+        // 尝试从 displayDate 解析一个标准的排序日期
+        let date = '2025-08-07';
+        const parsedDate = Date.parse(displayDate);
+        if (!isNaN(parsedDate)) {
+            const d = new Date(parsedDate);
+            date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        if (newerNews) {
-            paginationHtml += `<a href="${newerNews.url}" class="next-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-left: auto;">Next: ${newerNews.title} <i class="fas fa-arrow-right"></i></a>`;
-        }
-        paginationHtml += `</div>`;
+        allNewsItems.push({
+            slug: file.replace('.html', ''),
+            htmlFileName: file,
+            date,
+            displayDate,
+            title,
+            image: '',
+            bodyHtml: '', // 保持原样
+            url: relativeUrl,
+            isHtmlStatic: true
+        });
+    });
+}
 
-        const detailHtml = `<!DOCTYPE html>
+// 3. 按日期从新到旧排序
+allNewsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+// 4. 重新渲染由 PagesCMS 驱动的 MD 新闻详情页（带上下篇导航）
+allNewsItems.forEach((news, index) => {
+    if (news.isHtmlStatic) return; // 跳过纯静态老 HTML，不覆写它们
+
+    const fullUrl = `https://www.cwsemi.com${news.url}`;
+
+    const newerIndex = index - 1;
+    const olderIndex = index + 1;
+    const newerNews = (newerIndex >= 0) ? allNewsItems[newerIndex] : null;
+    const olderNews = (olderIndex < allNewsItems.length) ? allNewsItems[olderIndex] : null;
+
+    let paginationHtml = `<div class="news-pagination-nav" style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; gap: 15px; flex-wrap: wrap;">`;
+    
+    if (olderNews) {
+        paginationHtml += `<a href="${olderNews.url}" class="prev-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px;"><i class="fas fa-arrow-left"></i> Previous: ${olderNews.title}</a>`;
+    } else {
+        paginationHtml += `<span></span>`;
+    }
+
+    if (newerNews) {
+        paginationHtml += `<a href="${newerNews.url}" class="next-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-left: auto;">Next: ${newerNews.title} <i class="fas fa-arrow-right"></i></a>`;
+    }
+    paginationHtml += `</div>`;
+
+    const detailHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -200,7 +218,7 @@ if (fs.existsSync(newsDir)) {
                     <h3 class="news-title">${news.title}</h3>
                     <div class="news-content">
                         ${news.image ? `<img src="${news.image}" alt="${news.title}">` : ''}
-                        ${bodyHtml}
+                        ${news.bodyHtml}
                         <div style="text-align: center; margin-top: 30px;">
                             <a href="/news.html" class="back-to-news"><i class="fas fa-arrow-left"></i> Back to News</a>
                         </div>
@@ -222,26 +240,25 @@ if (fs.existsSync(newsDir)) {
 </body>
 </html>`;
 
-        fs.writeFileSync(path.join(outputDir, news.htmlFileName), detailHtml);
-    });
+    fs.writeFileSync(path.join(htmlNewsDir, news.htmlFileName), detailHtml);
+});
 
-    // 4. 同步更新 news.html 中的 allNews 数组
-    const newsHtmlPath = path.join(__dirname, 'news.html');
-    if (fs.existsSync(newsHtmlPath)) {
-        let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
-        
-        const minimalList = rawNewsList.map(item => ({
-            date: item.date,
-            displayDate: item.displayDate,
-            title: item.title,
-            url: item.url
-        }));
+// 5. 同步更新 news.html 中的 allNews 数组（包含所有新老新闻，按日期降序）
+const newsHtmlPath = path.join(__dirname, 'news.html');
+if (fs.existsSync(newsHtmlPath)) {
+    let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
+    
+    const minimalList = allNewsItems.map(item => ({
+        date: item.date,
+        displayDate: item.displayDate,
+        title: item.title,
+        url: item.url
+    }));
 
-        const updatedArrayStr = `var allNews = ${JSON.stringify(minimalList, null, 12)};`;
-        newsHtmlContent = newsHtmlContent.replace(/var\s+allNews\s*=\s*\[[\s\S]*?\];/m, updatedArrayStr);
+    const updatedArrayStr = `var allNews = ${JSON.stringify(minimalList, null, 12)};`;
+    newsHtmlContent = newsHtmlContent.replace(/var\s+allNews\s*=\s*\[[\s\S]*?\];/m, updatedArrayStr);
 
-        fs.writeFileSync(newsHtmlPath, newsHtmlContent);
-    }
+    fs.writeFileSync(newsHtmlPath, newsHtmlContent);
 }
 
-console.log('Build completed successfully with Pagination and enhanced styles.');
+console.log('Build completed successfully with all news items and correct timezone dates.');
