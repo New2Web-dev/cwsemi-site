@@ -8,16 +8,16 @@ if (!fs.existsSync(htmlNewsDir)) {
     fs.mkdirSync(htmlNewsDir, { recursive: true });
 }
 
-// 强力内容解析器：兼容富文本 HTML 以及 Markdown 语法转换
-fnConvertContent = function(content) {
+// 强力内容解析器：完美处理富文本 HTML 以及 Markdown 图文混排
+function convertContent(content) {
     if (!content) return '';
     
-    // 如果内容已经是 HTML 标签开头（如 <p> 或 <div>），则直接使用
+    // 如果内容已经是 HTML 标签（如 <p> 或 <img>），直接返回
     if (content.trim().startsWith('<')) {
         return content;
     }
 
-    // 否则，将其作为 Markdown 语法进行解析：
+    // 否则将其作为 Markdown 语法进行解析
     return content
         // 转换图片 ![alt](url) -> <img src="url" alt="alt">
         .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
@@ -42,11 +42,11 @@ fnConvertContent = function(content) {
             return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
         })
         .join('\n');
-};
+}
 
 let allNewsItems = [];
 
-// 1. 读取 PagesCMS 生成的 Markdown (.md) 文件
+// 仅读取 PagesCMS 生成的 Markdown (.md) 文件
 if (fs.existsSync(newsDir)) {
     const mdFiles = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
     mdFiles.forEach(file => {
@@ -78,8 +78,7 @@ if (fs.existsSync(newsDir)) {
             year: 'numeric' 
         });
 
-        // 统一处理正文内容转换
-        const bodyHtml = fnConvertContent(rawBody);
+        const bodyHtml = convertContent(rawBody);
 
         allNewsItems.push({
             slug,
@@ -89,56 +88,16 @@ if (fs.existsSync(newsDir)) {
             title,
             image,
             bodyHtml,
-            url: relativeUrl,
-            isHtmlStatic: false
+            url: relativeUrl
         });
     });
 }
 
-// 2. 同时收录原有的静态 HTML 新闻文件
-if (fs.existsSync(htmlNewsDir)) {
-    const htmlFiles = fs.readdirSync(htmlNewsDir).filter(file => file.endsWith('.html'));
-    htmlFiles.forEach(file => {
-        if (file === 'news.html') return;
-        const relativeUrl = `/news/${file}`;
-        if (allNewsItems.some(item => item.url === relativeUrl)) return;
-
-        const filePath = path.join(htmlNewsDir, file);
-        const content = fs.readFileSync(filePath, 'utf8');
-
-        const titleMatch = content.match(/<h[13][^>]*class="news-title"[^>]*>([\s\S]*?)<\/h[13]>/i) || content.match(/<title>([\s\S]*?)<\/title>/i);
-        const dateMatch = content.match(/<div[^>]*class="news-date"[^>]*>([\s\S]*?)<\/div>/i);
-
-        let title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : file.replace('.html', '');
-        let displayDate = dateMatch ? dateMatch[1].replace(/<[^>]+>/g, '').trim() : 'August 07, 2025';
-        let date = '2025-08-07';
-        const parsedDate = Date.parse(displayDate);
-        if (!isNaN(parsedDate)) {
-            const d = new Date(parsedDate);
-            date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        }
-
-        allNewsItems.push({
-            slug: file.replace('.html', ''),
-            htmlFileName: file,
-            date,
-            displayDate,
-            title,
-            image: '',
-            bodyHtml: '',
-            url: relativeUrl,
-            isHtmlStatic: true
-        });
-    });
-}
-
-// 3. 按日期降序排序
+// 按日期降序排序
 allNewsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// 4. 生成详情页
+// 生成所有详情页（包含上下篇导航）
 allNewsItems.forEach((news, index) => {
-    if (news.isHtmlStatic) return;
-
     const fullUrl = `https://www.cwsemi.com${news.url}`;
     const newerIndex = index - 1;
     const olderIndex = index + 1;
@@ -275,7 +234,7 @@ allNewsItems.forEach((news, index) => {
     fs.writeFileSync(path.join(htmlNewsDir, news.htmlFileName), detailHtml);
 });
 
-// 5. 更新 news.html
+// 同步更新 news.html 中的 allNews 数组（只包含通过 PagesCMS 发布的文章）
 const newsHtmlPath = path.join(__dirname, 'news.html');
 if (fs.existsSync(newsHtmlPath)) {
     let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
@@ -293,4 +252,4 @@ if (fs.existsSync(newsHtmlPath)) {
     fs.writeFileSync(newsHtmlPath, newsHtmlContent);
 }
 
-console.log('Build completed successfully with robust content parser.');
+console.log('Build completed successfully, driven strictly by PagesCMS markdown content.');
