@@ -4,42 +4,49 @@ const path = require('path');
 const newsDir = path.join(__dirname, 'content/news');
 const outputDir = path.join(__dirname, 'news');
 
-// 确保 /news/ 目录存在
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
 }
 
-// 简易 Markdown 转 HTML 转换器
-function simpleMarkdownToHtml(md) {
+// 增强版 Markdown 转 HTML 转换器（完美支持图片、标题、列表、引用框等）
+function parseMarkdownToHtml(md) {
     if (!md) return '';
-    return md
+    let html = md
+        // 转换图片 ![alt](src)
+        .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
+        // 转换超链接 [text](url)
+        .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
+        // 标题
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
         .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
-        .replace(/\*\*(.* animate)\*\*/gim, '<strong>$1</strong>')
-        .replace(/\*(.*)\*/gim, '<em>$1</em>')
-        .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
-        .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
-        .replace(/\n\s*\n/gim, '</p><p>')
-        .replace(/^(.+)$/gim, (match) => {
-            if (match.startsWith('<h') || match.startsWith('<block') || match.startsWith('<p')) {
-                return match;
-            }
-            return '<p>' + match + '</p>';
-        });
+        // 粗体和斜体
+        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+        // 引用块 (Award 样式区块支持)
+        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>');
+
+    // 处理段落换行
+    const paragraphs = html.split(/\n\s*\n/);
+    return paragraphs.map(p => {
+        p = p.trim();
+        if (!p) return '';
+        if (p.startsWith('<h') || p.startsWith('<img') || p.startsWith('<div') || p.startsWith('<block') || p.startsWith('<ul')) {
+            return p;
+        }
+        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
 }
 
-// 检查 content/news 目录
 if (fs.existsSync(newsDir)) {
     const files = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
-    let newsList = [];
+    let rawNewsList = [];
 
+    // 1. 先读取所有文章数据
     files.forEach(file => {
         const filePath = path.join(newsDir, file);
         const content = fs.readFileSync(filePath, 'utf8');
 
-        // 解析 Frontmatter (--- ... ---)
         const match = content.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
         if (!match) return;
 
@@ -54,36 +61,63 @@ if (fs.existsSync(newsDir)) {
         const date = dateMatch ? dateMatch[1] : '2026-01-01';
         const image = imageMatch ? imageMatch[2] : '';
 
-        // 日期处理
+        const slug = file.replace(/\.md$/, '');
+        const htmlFileName = `${slug}.html`;
+        const relativeUrl = `/news/${htmlFileName}`;
+
         const [year, month, day] = date.split('-');
         const dateObj = new Date(Date.UTC(year, month - 1, day));
         const displayDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
 
-        const slug = file.replace(/\.md$/, '');
-        const htmlFileName = `${slug}.html`;
-        const relativeUrl = `/news/${htmlFileName}`;
-        const fullUrl = `https://www.cwsemi.com${relativeUrl}`;
-
-        newsList.push({
-            date: date,
-            displayDate: displayDate,
-            title: title,
+        rawNewsList.push({
+            slug,
+            htmlFileName,
+            date,
+            displayDate,
+            title,
+            image,
+            bodyMd,
             url: relativeUrl
         });
+    });
 
-        const bodyHtml = simpleMarkdownToHtml(bodyMd);
+    // 2. 按日期从新到旧排序
+    rawNewsList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // 生成精准与原有设计一致的 HTML 详情页
+    // 3. 循环生成每个详情页（并计算 上一篇 / 下一篇）
+    rawNewsList.forEach((news, index) => {
+        const fullUrl = `https://www.cwsemi.com${news.url}`;
+        const bodyHtml = parseMarkdownToHtml(news.bodyMd);
+
+        // 上一篇（按倒序，数组中 index - 1 是更新的文章）
+        const newerNews = index > 0 ? rawNewsList[index - 1] : null;
+        // 下一篇（按倒序，数组中 index + 1 是更旧的文章）
+        const olderNews = index < rawNewsList.length - 1 ? rawNewsList[index + 1] : null;
+
+        // 构建上一篇/下一篇 HTML 导航条
+        let paginationHtml = `<div class="news-pagination-nav" style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; gap: 15px; flex-wrap: wrap;">`;
+        
+        if (olderNews) {
+            paginationHtml += `<a href="${olderNews.url}" class="prev-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px;"><i class="fas fa-arrow-left"></i> Previous: ${olderNews.title}</a>`;
+        } else {
+            paginationHtml += `<span></span>`;
+        }
+
+        if (newerNews) {
+            paginationHtml += `<a href="${newerNews.url}" class="next-story" style="color: var(--primary-color); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-left: auto;">Next: ${newerNews.title} <i class="fas fa-arrow-right"></i></a>`;
+        }
+        paginationHtml += `</div>`;
+
         const detailHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title} - Digisino Electronics</title>
+    <title>${news.title} - Digisino Electronics</title>
     <link rel="icon" href="/svg-logos/digisino-favicon.png" type="image/png" sizes="192x192">
     <link rel="shortcut icon" href="/svg-logos/digisino-favicon.png">
     <link rel="apple-touch-icon" href="/svg-logos/digisino-favicon.png">
-    <meta name="description" content="${title} - Latest updates from Digisino Electronics">
+    <meta name="description" content="${news.title} - Latest updates from Digisino Electronics">
     <link rel="canonical" href="${fullUrl}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -102,10 +136,12 @@ if (fs.existsSync(newsDir)) {
         .news-title { font-size: 1.8rem; margin-bottom: 20px; color: var(--primary-dark); }
         .news-content { margin-bottom: 25px; font-size: 1.1rem; line-height: 1.8; }
         .news-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: block; margin-left: auto; margin-right: auto; }
-        .back-to-news { display: inline-flex; align-items: center; gap: 8px; padding: 12px 25px; background: var(--primary-color); color: var(--white); border-radius: 4px; margin-top: 30px; font-weight: 500; }
+        .news-content h2, .news-content h3 { color: var(--primary-dark); margin-top: 30px; margin-bottom: 15px; }
+        .award-details { background: rgba(0, 111, 66, 0.05); border-left: 4px solid var(--primary-color); padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .back-to-news { display: inline-flex; align-items: center; gap: 8px; padding: 12px 25px; background: var(--primary-color); color: var(--white); border-radius: 4px; margin-top: 20px; font-weight: 500; text-decoration: none; }
         .back-to-news:hover { background: var(--primary-dark); color: var(--white); }
         .social-share { display: flex; justify-content: center; gap: 15px; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); flex-wrap: wrap; }
-        .share-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; color: white; font-weight: 500; }
+        .share-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; color: white; font-weight: 500; text-decoration: none; }
         .share-btn.facebook { background: #3b5998; }
         .share-btn.twitter { background: #1DA1F2; }
         .share-btn.linkedin { background: #0077B5; }
@@ -147,7 +183,7 @@ if (fs.existsSync(newsDir)) {
 
     <section class="page-header">
         <div class="container">
-            <h1>${title}</h1>
+            <h1>${news.title}</h1>
             <ul class="breadcrumb">
                 <li><a href="/index.html">Home</a></li>
                 <li><a href="/news.html">News</a></li>
@@ -160,17 +196,18 @@ if (fs.existsSync(newsDir)) {
         <div class="container">
             <div class="news-container">
                 <div class="news-item">
-                    <div class="news-date"><i class="far fa-calendar-alt"></i> ${displayDate}</div>
-                    <h3 class="news-title">${title}</h3>
+                    <div class="news-date"><i class="far fa-calendar-alt"></i> ${news.displayDate}</div>
+                    <h3 class="news-title">${news.title}</h3>
                     <div class="news-content">
-                        ${image ? `<img src="${image}" alt="${title}">` : ''}
+                        ${news.image ? `<img src="${news.image}" alt="${news.title}">` : ''}
                         ${bodyHtml}
-                        <div style="text-align: center; margin-top: 40px;">
+                        <div style="text-align: center; margin-top: 30px;">
                             <a href="/news.html" class="back-to-news"><i class="fas fa-arrow-left"></i> Back to News</a>
                         </div>
+                        ${paginationHtml}
                     </div>
                     <div class="social-share">
-                        <span class="share-title">Share this post:</span>
+                        <span class="share-title" style="align-self: center; font-weight: 600; color: #666;">Share this post:</span>
                         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}" target="_blank" class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
                         <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(fullUrl)}" target="_blank" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
@@ -185,36 +222,26 @@ if (fs.existsSync(newsDir)) {
 </body>
 </html>`;
 
-        fs.writeFileSync(path.join(outputDir, htmlFileName), detailHtml);
+        fs.writeFileSync(path.join(outputDir, news.htmlFileName), detailHtml);
     });
 
-    // 针对新添加或变更的新闻，更新 news.html 中的 allNews 数组
+    // 4. 同步更新 news.html 中的 allNews 数组
     const newsHtmlPath = path.join(__dirname, 'news.html');
-    if (fs.existsSync(newsHtmlPath) && newsList.length > 0) {
+    if (fs.existsSync(newsHtmlPath)) {
         let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
         
-        // 合并原有 allNews 避免丢失老新闻
-        const arrayMatch = newsHtmlContent.match(/var\s+allNews\s*=\s*(\[\s*[\s\S]*?\s*\]);/);
-        let existingNews = [];
-        if (arrayMatch) {
-            try {
-                existingNews = eval(arrayMatch[1]);
-            } catch (e) {}
-        }
+        const minimalList = rawNewsList.map(item => ({
+            date: item.date,
+            displayDate: item.displayDate,
+            title: item.title,
+            url: item.url
+        }));
 
-        // 合并新老新闻（按 url 去重）
-        const combinedMap = new Map();
-        existingNews.forEach(item => combinedMap.set(item.url, item));
-        newsList.forEach(item => combinedMap.set(item.url, item));
-
-        const updatedArray = Array.from(combinedMap.values());
-        updatedArray.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        const updatedArrayStr = `var allNews = ${JSON.stringify(updatedArray, null, 12)};`;
+        const updatedArrayStr = `var allNews = ${JSON.stringify(minimalList, null, 12)};`;
         newsHtmlContent = newsHtmlContent.replace(/var\s+allNews\s*=\s*\[[\s\S]*?\];/m, updatedArrayStr);
 
         fs.writeFileSync(newsHtmlPath, newsHtmlContent);
     }
 }
 
-console.log('Build completed successfully.');
+console.log('Build completed successfully with Pagination and enhanced styles.');
