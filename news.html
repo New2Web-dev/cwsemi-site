@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* ===== News 页面专属样式 ===== */
-
         /* Page Header */
         .page-header {
             background: linear-gradient(rgba(0, 111, 66, 0.6), rgba(0, 111, 66, 0.75)),
@@ -53,16 +51,13 @@
             color: var(--white);
         }
 
-        /* News Section */
+        /* News List */
         .news-section {
             padding: 80px 0;
         }
-
-        /* News List (目录形式) */
         .news-list {
             margin-top: 40px;
         }
-
         .news-item {
             display: flex;
             align-items: center;
@@ -71,15 +66,12 @@
             border-bottom: 1px solid #e5e5e5;
             transition: var(--transition);
         }
-
         .news-item:first-child {
             border-top: 1px solid #e5e5e5;
         }
-
         .news-item:hover {
             background-color: rgba(0, 111, 66, 0.04);
         }
-
         .news-index {
             flex-shrink: 0;
             width: 40px;
@@ -87,7 +79,6 @@
             color: var(--primary-color);
             font-size: 1rem;
         }
-
         .news-date {
             flex-shrink: 0;
             width: 150px;
@@ -95,7 +86,6 @@
             font-size: 0.95rem;
             font-weight: 500;
         }
-
         .news-title {
             flex: 1;
             font-size: 1.05rem;
@@ -104,7 +94,6 @@
             margin: 0;
             line-height: 1.5;
         }
-
         .news-read-more {
             flex-shrink: 0;
             font-size: 0.9rem;
@@ -115,28 +104,16 @@
             white-space: nowrap;
             transition: var(--transition);
         }
-
         .news-read-more:hover {
             color: var(--primary-dark);
             text-decoration: underline;
         }
-
-        /* 每个 item 内部的链接共享悬停效果 */
         .news-item a {
             color: inherit;
         }
         .news-item a:hover {
             color: var(--primary-color);
         }
-        .news-index-link {
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .news-date-link {
-            color: var(--gray);
-        }
-
-        /* 空状态 */
         .news-empty {
             text-align: center;
             padding: 60px 20px;
@@ -152,7 +129,6 @@
             margin-top: 50px;
             flex-wrap: wrap;
         }
-
         .pagination-btn {
             display: inline-flex;
             align-items: center;
@@ -169,83 +145,45 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .pagination-btn:hover:not(:disabled) {
             background: var(--primary-color);
             color: var(--white);
             border-color: var(--primary-color);
         }
-
         .pagination-btn.active {
             background: var(--primary-color);
             color: var(--white);
             border-color: var(--primary-color);
         }
-
         .pagination-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
         }
-
         .pagination-btn.prev,
         .pagination-btn.next {
             gap: 8px;
             padding: 0 18px;
         }
 
-        /* ===== News 页面响应式 ===== */
+        /* Responsive */
         @media (max-width: 991.98px) {
-            .page-header {
-                padding: 80px 0 50px;
-            }
-            .news-item {
-                flex-wrap: wrap;
-                gap: 8px 15px;
-            }
-            .news-index {
-                width: 30px;
-            }
-            .news-date {
-                width: auto;
-            }
-            .news-title {
-                flex: 1 1 100%;
-                order: 3;
-            }
-            .news-read-more {
-                order: 4;
-                margin-left: auto;
-            }
+            .page-header { padding: 80px 0 50px; }
+            .news-item { flex-wrap: wrap; gap: 8px 15px; }
+            .news-index { width: 30px; }
+            .news-date { width: auto; }
+            .news-title { flex: 1 1 100%; order: 3; }
+            .news-read-more { order: 4; margin-left: auto; }
         }
-
         @media (max-width: 767.98px) {
-            .page-header h1 {
-                font-size: 2.5rem;
-            }
+            .page-header h1 { font-size: 2.5rem; }
         }
-
         @media (max-width: 575.98px) {
-            .page-header {
-                padding: 60px 0 30px;
-                min-height: 35vh;
-            }
-            .page-header h1 {
-                font-size: 2rem;
-            }
-            .news-item {
-                padding: 15px 5px;
-            }
-            .news-title {
-                font-size: 1rem;
-            }
-            .news-read-more {
-                font-size: 0.85rem;
-            }
-            .pagination-btn {
-                min-width: 38px;
-                height: 38px;
-                font-size: 0.85rem;
-            }
+            .page-header { padding: 60px 0 30px; min-height: 35vh; }
+            .page-header h1 { font-size: 2rem; }
+            .news-item { padding: 15px 5px; }
+            .news-title { font-size: 1rem; }
+            .news-read-more { font-size: 0.85rem; }
+            .pagination-btn { min-width: 38px; height: 38px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -322,10 +260,7 @@
                 <p>Stay informed about our latest achievements and industry insights</p>
             </div>
 
-            <!-- 新闻列表容器（JS 动态渲染） -->
             <div class="news-list" id="newsList"></div>
-
-            <!-- 分页容器（JS 动态渲染） -->
             <div class="news-pagination" id="newsPagination"></div>
         </div>
     </section>
@@ -395,128 +330,106 @@
     <!-- 公共脚本 -->
     <script src="/js/main.js" defer></script>
 
-<!-- News 页面动态渲染脚本 -->
+    <!-- News 列表渲染 -->
     <script>
-        (async function () {
-            const ITEMS_PER_PAGE = 30;
+        /* ============================================================
+           新闻数据
+           新增新闻时，在数组里加一条即可：
+           {
+               date: '2025-09-15',
+               displayDate: 'September 15, 2025',
+               title: '新闻标题',
+               url: '/news/news-20250915.html'
+           }
+           ============================================================ */
+        var allNews = [
+            {
+                date: '2026-10-06',
+                displayDate: 'October 06, 2026',
+                title: 'Digisino Ranked Among Top 50 APAC Distributors in 2026',
+                url: '/news/2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026.html'
+            },
+            {
+                date: '2025-08-07',
+                displayDate: 'August 07, 2025',
+                title: 'Digisino Ranked Among Top 50 APAC Distributors',
+                url: '/news/news-20250807.html'
+            },
+            {
+                date: '2025-07-18',
+                displayDate: 'July 18, 2025',
+                title: 'Successful Delivery of STM32F407ZET6 to Brazilian EMS Leader',
+                url: '/news/news-20250718.html'
+            },
+            {
+                date: '2025-07-12',
+                displayDate: 'July 12, 2025',
+                title: 'Strategic Partnership with BYD: Supply Chain Solutions Showcase',
+                url: '/news/news-20250712.html'
+            }
+        ];
 
-            const listEl = document.getElementById('newsList');
-            const paginationEl = document.getElementById('newsPagination');
+        document.addEventListener('DOMContentLoaded', function () {
+            var ITEMS_PER_PAGE = 30;
+
+            var listEl = document.getElementById('newsList');
+            var paginationEl = document.getElementById('newsPagination');
             if (!listEl || !paginationEl) return;
 
-            // 兜底默认数据
-            let defaultNews = [
-                {
-                    id: '2026-10-06-digisino-ranked-among-top-50-apac-distributors-in-2026',
-                    date: '2026-10-06',
-                    displayDate: 'October 06, 2026',
-                    title: 'Digisino Ranked Among Top 50 APAC Distributors in 2026'
-                },
-                {
-                    id: 'news-20250807',
-                    date: '2025-08-07',
-                    displayDate: 'August 07, 2025',
-                    title: 'Digisino Ranked Among Top 50 APAC Distributors',
-                    url: '/news/news-20250807.html'
-                },
-                {
-                    id: 'news-20250718',
-                    date: '2025-07-18',
-                    displayDate: 'July 18, 2025',
-                    title: 'Successful Delivery of STM32F407ZET6 to Brazilian EMS Leader',
-                    url: '/news/news-20250718.html'
-                },
-                {
-                    id: 'news-20250712',
-                    date: '2025-07-12',
-                    displayDate: 'July 12, 2025',
-                    title: 'Strategic Partnership with BYD: Supply Chain Solutions Showcase',
-                    url: '/news/news-20250712.html'
-                }
-            ];
-
-            let allNews = [];
-
-            try {
-                // 读取 JSON 索引
-                const response = await fetch('/content/news-index.json?v=' + new Date().getTime());
-                if (response.ok) {
-                    allNews = await response.json();
-                } else {
-                    allNews = defaultNews;
-                }
-            } catch (error) {
-                console.error('Error fetching JSON:', error);
-                allNews = defaultNews;
-            }
-
             // 按日期从新到旧排序
-            const sortedNews = allNews.slice().sort(function (a, b) {
+            var sortedNews = allNews.slice().sort(function (a, b) {
                 return new Date(b.date) - new Date(a.date);
             });
 
-            const totalPages = Math.max(1, Math.ceil(sortedNews.length / ITEMS_PER_PAGE));
+            var totalPages = Math.max(1, Math.ceil(sortedNews.length / ITEMS_PER_PAGE));
 
+            // 从 URL hash 读取当前页
             function getPageFromHash() {
-                const match = window.location.hash.match(/page=(\d+)/);
+                var match = window.location.hash.match(/page=(\d+)/);
                 if (match) {
-                    const p = parseInt(match[1], 10);
+                    var p = parseInt(match[1], 10);
                     if (p >= 1 && p <= totalPages) return p;
                 }
                 return 1;
             }
 
-            // 核心逻辑：智能选择跳转路径
-           function getNewsUrl(news) {
-    if (news.url) return news.url;
-    // 强制带上 .html，防止服务器 Clean URLs 重定向导致相对路径失效
-    return `/news-detail.html?id=${encodeURIComponent(news.id)}`;
-}
-                // 2. 如果是 Pages CMS 生成的 MD 文章，统一跳转到 news-detail.html 动态渲染页
-                return `/news-detail.html?id=${encodeURIComponent(news.id)}`;
-            }
-
+            // 渲染指定页
             function renderPage(page) {
                 listEl.innerHTML = '';
 
                 if (sortedNews.length === 0) {
-                    listEl.innerHTML = '<div class="news-empty">No news available yet. Please check back later.</div>';
+                    listEl.innerHTML = '<div class="news-empty">No news available yet.</div>';
                     paginationEl.innerHTML = '';
                     return;
                 }
 
-                const startIndex = (page - 1) * ITEMS_PER_PAGE;
-                const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedNews.length);
+                var startIndex = (page - 1) * ITEMS_PER_PAGE;
+                var endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedNews.length);
 
-                for (let i = startIndex; i < endIndex; i++) {
-                    const news = sortedNews[i];
-                    const displayIndex = i + 1;
-                    const newsUrl = getNewsUrl(news);
+                for (var i = startIndex; i < endIndex; i++) {
+                    var news = sortedNews[i];
+                    var displayIndex = i + 1;
 
-                    const item = document.createElement('div');
+                    var item = document.createElement('div');
                     item.className = 'news-item';
 
-                    // 序号
-                    const indexLink = document.createElement('a');
-                    indexLink.href = newsUrl;
-                    indexLink.className = 'news-index news-index-link';
+                    var indexLink = document.createElement('a');
+                    indexLink.href = news.url;
+                    indexLink.className = 'news-index';
                     indexLink.textContent = displayIndex + '.';
 
-                    // 日期
-                    const dateLink = document.createElement('a');
-                    dateLink.href = newsUrl;
-                    dateLink.className = 'news-date news-date-link';
-                    dateLink.textContent = news.displayDate || news.date;
+                    var dateLink = document.createElement('a');
+                    dateLink.href = news.url;
+                    dateLink.className = 'news-date';
+                    dateLink.textContent = news.displayDate;
 
-                    // 标题
-                    const titleLink = document.createElement('a');
-                    titleLink.href = newsUrl;
+                    var titleLink = document.createElement('a');
+                    titleLink.href = news.url;
                     titleLink.className = 'news-title';
                     titleLink.textContent = news.title;
 
-                    // Read Full Story
-                    const readMoreLink = document.createElement('a');
-                    readMoreLink.href = newsUrl;
+                    var readMoreLink = document.createElement('a');
+                    readMoreLink.href = news.url;
                     readMoreLink.className = 'news-read-more';
                     readMoreLink.textContent = 'Read Full Story';
 
@@ -530,12 +443,12 @@
                 renderPagination(page);
             }
 
+            // 渲染分页
             function renderPagination(currentPage) {
                 paginationEl.innerHTML = '';
-
                 if (totalPages <= 1) return;
 
-                const prevBtn = document.createElement('button');
+                var prevBtn = document.createElement('button');
                 prevBtn.className = 'pagination-btn prev';
                 prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
                 prevBtn.disabled = currentPage === 1;
@@ -544,17 +457,17 @@
                 });
                 paginationEl.appendChild(prevBtn);
 
-                for (let p = 1; p <= totalPages; p++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'pagination-btn' + (p === currentPage ? ' active' : '');
-                    btn.textContent = p;
-                    btn.addEventListener('click', function () {
-                        goToPage(p);
-                    });
-                    paginationEl.appendChild(btn);
+                for (var p = 1; p <= totalPages; p++) {
+                    (function (pageNum) {
+                        var btn = document.createElement('button');
+                        btn.className = 'pagination-btn' + (pageNum === currentPage ? ' active' : '');
+                        btn.textContent = pageNum;
+                        btn.addEventListener('click', function () { goToPage(pageNum); });
+                        paginationEl.appendChild(btn);
+                    })(p);
                 }
 
-                const nextBtn = document.createElement('button');
+                var nextBtn = document.createElement('button');
                 nextBtn.className = 'pagination-btn next';
                 nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
                 nextBtn.disabled = currentPage === totalPages;
@@ -575,5 +488,7 @@
             });
 
             renderPage(getPageFromHash());
-        })();
+        });
     </script>
+</body>
+</html>
