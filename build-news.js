@@ -8,6 +8,42 @@ if (!fs.existsSync(htmlNewsDir)) {
     fs.mkdirSync(htmlNewsDir, { recursive: true });
 }
 
+// 强力内容解析器：兼容富文本 HTML 以及 Markdown 语法转换
+fnConvertContent = function(content) {
+    if (!content) return '';
+    
+    // 如果内容已经是 HTML 标签开头（如 <p> 或 <div>），则直接使用
+    if (content.trim().startsWith('<')) {
+        return content;
+    }
+
+    // 否则，将其作为 Markdown 语法进行解析：
+    return content
+        // 转换图片 ![alt](url) -> <img src="url" alt="alt">
+        .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
+        // 转换超链接 [text](url) -> <a href="url" target="_blank">text</a>
+        .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
+        // 标题转换
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        // 粗体
+        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+        // 斜体
+        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+        // 段落与换行处理
+        .split(/\n\s*\n/)
+        .map(p => {
+            p = p.trim();
+            if (!p) return '';
+            if (p.startsWith('<h') || p.startsWith('<img') || p.startsWith('<div') || p.startsWith('<ul')) {
+                return p;
+            }
+            return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+        })
+        .join('\n');
+};
+
 let allNewsItems = [];
 
 // 1. 读取 PagesCMS 生成的 Markdown (.md) 文件
@@ -15,13 +51,13 @@ if (fs.existsSync(newsDir)) {
     const mdFiles = fs.readdirSync(newsDir).filter(file => file.endsWith('.md'));
     mdFiles.forEach(file => {
         const filePath = path.join(newsDir, file);
-        const content = fs.readFileSync(filePath, 'utf8');
+        const fileContent = fs.readFileSync(filePath, 'utf8');
 
-        const match = content.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
+        const match = fileContent.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
         if (!match) return;
 
         const headers = match[1];
-        const bodyHtml = match[2].trim(); // PagesCMS 输出的富文本本身就是 HTML
+        const rawBody = match[2].trim();
 
         const titleMatch = headers.match(/title:\s*(['"]?)(.*?)\1$/m);
         const dateMatch = headers.match(/date:\s*([0-9\-]+)/m);
@@ -35,13 +71,15 @@ if (fs.existsSync(newsDir)) {
         const htmlFileName = `${slug}.html`;
         const relativeUrl = `/news/${htmlFileName}`;
 
-        // 修复时区导致的日期偏移问题（按本地年月日解析）
         const [year, month, day] = date.split('-').map(Number);
         const displayDate = new Date(year, month - 1, day).toLocaleDateString('en-US', { 
             month: 'long', 
             day: '2-digit', 
             year: 'numeric' 
         });
+
+        // 统一处理正文内容转换
+        const bodyHtml = fnConvertContent(rawBody);
 
         allNewsItems.push({
             slug,
@@ -57,27 +95,22 @@ if (fs.existsSync(newsDir)) {
     });
 }
 
-// 2. 同时收录原有的静态 HTML 新闻文件（防止老新闻丢失）
+// 2. 同时收录原有的静态 HTML 新闻文件
 if (fs.existsSync(htmlNewsDir)) {
     const htmlFiles = fs.readdirSync(htmlNewsDir).filter(file => file.endsWith('.html'));
     htmlFiles.forEach(file => {
-        // 排除非新闻详情页或自动生成的页面
         if (file === 'news.html') return;
-        
         const relativeUrl = `/news/${file}`;
-        // 避免重复收录
         if (allNewsItems.some(item => item.url === relativeUrl)) return;
 
         const filePath = path.join(htmlNewsDir, file);
         const content = fs.readFileSync(filePath, 'utf8');
 
-        // 从 HTML 中提取标题和日期
         const titleMatch = content.match(/<h[13][^>]*class="news-title"[^>]*>([\s\S]*?)<\/h[13]>/i) || content.match(/<title>([\s\S]*?)<\/title>/i);
         const dateMatch = content.match(/<div[^>]*class="news-date"[^>]*>([\s\S]*?)<\/div>/i);
 
         let title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : file.replace('.html', '');
         let displayDate = dateMatch ? dateMatch[1].replace(/<[^>]+>/g, '').trim() : 'August 07, 2025';
-        // 尝试从 displayDate 解析一个标准的排序日期
         let date = '2025-08-07';
         const parsedDate = Date.parse(displayDate);
         if (!isNaN(parsedDate)) {
@@ -92,22 +125,21 @@ if (fs.existsSync(htmlNewsDir)) {
             displayDate,
             title,
             image: '',
-            bodyHtml: '', // 保持原样
+            bodyHtml: '',
             url: relativeUrl,
             isHtmlStatic: true
         });
     });
 }
 
-// 3. 按日期从新到旧排序
+// 3. 按日期降序排序
 allNewsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// 4. 重新渲染由 PagesCMS 驱动的 MD 新闻详情页（带上下篇导航）
+// 4. 生成详情页
 allNewsItems.forEach((news, index) => {
-    if (news.isHtmlStatic) return; // 跳过纯静态老 HTML，不覆写它们
+    if (news.isHtmlStatic) return;
 
     const fullUrl = `https://www.cwsemi.com${news.url}`;
-
     const newerIndex = index - 1;
     const olderIndex = index + 1;
     const newerNews = (newerIndex >= 0) ? allNewsItems[newerIndex] : null;
@@ -243,7 +275,7 @@ allNewsItems.forEach((news, index) => {
     fs.writeFileSync(path.join(htmlNewsDir, news.htmlFileName), detailHtml);
 });
 
-// 5. 同步更新 news.html 中的 allNews 数组（包含所有新老新闻，按日期降序）
+// 5. 更新 news.html
 const newsHtmlPath = path.join(__dirname, 'news.html');
 if (fs.existsSync(newsHtmlPath)) {
     let newsHtmlContent = fs.readFileSync(newsHtmlPath, 'utf8');
@@ -261,4 +293,4 @@ if (fs.existsSync(newsHtmlPath)) {
     fs.writeFileSync(newsHtmlPath, newsHtmlContent);
 }
 
-console.log('Build completed successfully with all news items and correct timezone dates.');
+console.log('Build completed successfully with robust content parser.');
